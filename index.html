@@ -745,8 +745,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.7.0',
-  released: '2026-11-13T11:30:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.7.2',
+  released: '2026-11-13T13:35:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -864,6 +864,13 @@ en: {
   'pm.decode':'The browser couldn’t decode this video — usually a format this device can’t handle (for example 10-bit HEVC or H.264).\nUse “Play in VLC”, or try another browser.',
   'pm.details':'Technical details: {d}',
   'p.checking':'Checking the file…','p.compatLoading':'Compatibility mode: preparing the sound…',
+  'p.reconnect':'The stream stopped — reconnecting… ({n})','p.recover':'Fixing a playback glitch… ({n})',
+  'p.native':'HLS (browser player)',
+  'pm.cors':'The stream’s server answers, but doesn’t let this page read its reply (it sends no CORS permission) — the reply may be the stream or an error such as “connection limit reached”.\n{fix}',
+  'pm.corsFixLocal':'Open the channel from your Vercel site, whose proxy can relay it, or use “Play in VLC”.',
+  'pm.corsFixWeb':'Add the proxy file api/proxy.js to this site so it can relay the stream, or use “Play in VLC”.',
+  'pm.unreachable':'The stream’s server didn’t answer — the channel may be offline right now, or its server dropped the connection (some do when the connection limit is reached).\nTry again in a minute, or another channel.',
+  'pm.refused':'The server refused this stream (HTTP {s}).\nWith IPTV this usually means the account’s connections are in use: the channel you just left can stay counted for up to a minute, especially with HLS. Wait a moment and try again; on single-connection accounts the TS format frees the connection faster when you switch channels.',
   'p.compatOn':'Compatibility mode: this film’s {list} audio is converted in the browser so it plays with sound. The picture is not re-encoded.',
   'p.compatShort':'Compatibility mode: the Dolby audio is converted in the browser.',
   'pb.compat':'Play unsupported Dolby audio in the browser',
@@ -996,6 +1003,13 @@ ar: {
   'pm.decode':'لم يستطع المتصفح فك ترميز هذا الفيديو — غالباً صيغة لا يدعمها هذا الجهاز (مثل HEVC أو H.264 بعمق 10-bit).\nاستخدم «تشغيل في VLC»، أو جرّب متصفحاً آخر.',
   'pm.details':'تفاصيل فنية: {d}',
   'p.checking':'جاري فحص الملف…','p.compatLoading':'وضع التوافق: جاري تجهيز الصوت…',
+  'p.reconnect':'توقف البث — جاري إعادة الاتصال… ({n})','p.recover':'جاري معالجة خلل في التشغيل… ({n})',
+  'p.native':'HLS (مشغّل المتصفح)',
+  'pm.cors':'سيرفر البث يرد، لكنه لا يسمح لهذه الصفحة بقراءة رده (لا يرسل إذن CORS) — قد يكون الرد هو البث نفسه أو رسالة خطأ مثل «تم الوصول للحد الأقصى من الاتصالات».\n{fix}',
+  'pm.corsFixLocal':'افتح القناة من موقعك على Vercel ليمررها الوسيط، أو استخدم «تشغيل في VLC».',
+  'pm.corsFixWeb':'أضف ملف الوسيط api/proxy.js لهذا الموقع ليمرر البث، أو استخدم «تشغيل في VLC».',
+  'pm.unreachable':'سيرفر البث لم يرد — قد تكون القناة متوقفة حالياً، أو قطع السيرفر الاتصال (بعض السيرفرات تفعل ذلك عند الوصول للحد الأقصى من الاتصالات).\nحاول بعد دقيقة، أو جرّب قناة أخرى.',
+  'pm.refused':'السيرفر رفض هذا البث (HTTP {s}).\nفي IPTV يعني هذا غالباً أن اتصالات الحساب مستخدمة: القناة التي تركتها للتو قد تبقى محسوبة حتى دقيقة، خصوصاً بصيغة HLS. انتظر قليلاً وحاول مرة أخرى؛ وفي الحسابات ذات الاتصال الواحد تحرر صيغة TS الاتصال أسرع عند التنقل بين القنوات.',
   'p.compatOn':'وضع التوافق: صوت هذا الفيلم بصيغة {list} يتم تحويله داخل المتصفح ليعمل بالصوت. الصورة لا يُعاد ترميزها.',
   'p.compatShort':'وضع التوافق: يتم تحويل صوت Dolby داخل المتصفح.',
   'pb.compat':'تشغيل صوت Dolby غير المدعوم داخل المتصفح',
@@ -2333,8 +2347,29 @@ function compatStream(video, url, onError){
 }
 
 // Self-contained (also injected into the separate player window) — must not use outer variables.
-function attachStream(video, url, kind, libs, onError){
+function attachStream(video, url, kind, libs, onError, onStatus, opts){
   var hls = null, mp = null, dead = false, seen = {};
+  // live streams break now and then (expired tokens, dropped connections, a corrupt stretch): recover before giving up
+  var live = kind === 'live', played = false, tries = 0, fixes = 0, total = 0, retryTimer = 0, steadyTimer = 0;
+  function status(what, n){ if (onStatus && !dead) try { onStatus(what, n); } catch (e){} }
+  function again(http){
+    // before the first picture, only a refusal (often a connection still counted from the last channel) is worth one more wait
+    var limit = played ? 5 : (http === 401 || http === 403 || http === 429 || http === 458 || http === 509) ? 1 : 0;
+    if (tries >= limit || total >= 30) return false;
+    tries++; total++; return true;
+  }
+  function later(fn){
+    var d = played ? [1500, 3000, 5000, 8000, 10000][tries - 1] || 10000 : 3000;
+    status('reconnect', tries);
+    clearTimeout(retryTimer); retryTimer = setTimeout(function(){ if (!dead) fn(); }, d);
+  }
+  function onPlaying(){
+    played = true;
+    // a reconnect that plays again has worked: a later break starts counting afresh (30 reconnects at most per channel)
+    tries = 0;
+    clearTimeout(steadyTimer); steadyTimer = setTimeout(function(){ fixes = 0; }, 30000);
+  }
+  video.addEventListener('playing', onPlaying);
   var cache = window.__libs || (window.__libs = {});
   function load(src){
     if (!cache[src]) cache[src] = new Promise(function(ok, bad){
@@ -2360,11 +2395,24 @@ function attachStream(video, url, kind, libs, onError){
   video.onerror = function(){
     // 2 = the download broke, 3 = the decoder failed, 4 = format not supported; Chrome's message says more
     var er = video.error, c = er && er.code;
+    // a corrupt stretch in a stream: hls.js and mpegts.js can rebuild the player and carry on
+    if (hls && c === 3 && fixes < 3){ fixes++; status('recover', fixes); try { hls.recoverMediaError(); } catch (e){} return; }
+    if (mp && live && (c === 2 || c === 3) && fixes < 3){ fixes++; status('recover', fixes); restartTs(); return; }
+    // a film that broke part-way: reload it and continue from the same point
+    if (!hls && !mp && !live && played && (c === 2 || c === 3) && fixes < 2){
+      fixes++; status('recover', fixes);
+      var at = video.currentTime;
+      video.addEventListener('loadedmetadata', function(){ try { video.currentTime = at + 0.5; } catch (e){} var q = video.play(); if (q && q.catch) q.catch(function(){}); }, { once: true });
+      video.src = url; return;
+    }
+    if (!hls && !mp && live && c === 2 && again(0)){ later(function(){ video.src = url; var q = video.play(); if (q && q.catch) q.catch(function(){}); }); return; }
     fail(c === 2 ? 'network' : c === 3 ? 'decode' : 'media', { detail: er ? 'MediaError ' + c + (er.message ? ': ' + er.message : '') : '' });
   };
   (async function(){
     try {
-      if (ext === 'm3u8'){
+      // the browser's own HLS player loads the stream like a picture: no CORS permission needed from the server
+      if (ext === 'm3u8' && opts && opts.native) video.src = url;
+      else if (ext === 'm3u8'){
         // hls.js wherever Media Source exists: it behaves the same in every browser and reports codec problems;
         // the browser's own HLS player only where there is no Media Source (older iPhones)
         var native = video.canPlayType('application/vnd.apple.mpegurl'), lib = null;
@@ -2372,46 +2420,83 @@ function attachStream(video, url, kind, libs, onError){
           try { await load(libs.hls); lib = window.Hls; } catch (e){ if (!native) throw e; }
         }
         if (dead) return;
-        if (lib && lib.isSupported()){
-          hls = new lib({ enableWorker: true });
-          hls.on(lib.Events.BUFFER_CODECS, function(e, d){ if (d && d.video) seen.video = d.video.codec; if (d && d.audio) seen.audio = d.audio.codec; });
-          hls.on(lib.Events.ERROR, function(e, d){
-            if (!d || !d.fatal) return;
-            var bad = codecBad(seen.video, seen.audio) || (d.details === 'manifestIncompatibleCodecsError' ? {} : null);
-            var why = 'hls.js: ' + d.details + (d.response && d.response.code ? ' (HTTP ' + d.response.code + ')' : '');
-            fail(bad ? 'codec' : d.type === 'networkError' ? 'network' : 'media', Object.assign({ detail: why }, bad || {}));
-          });
-          hls.loadSource(url); hls.attachMedia(video);
-        } else video.src = url;
+        if (lib && lib.isSupported()) startHls(lib);
+        else video.src = url;
       } else if (ext === 'ts' || (kind === 'live' && !ext)){
         await load(libs.mpegts); if (dead) return;
-        var M = window.mpegts;
-        if (!M || !M.isSupported()) return fail('unsupported');
-        mp = M.createPlayer({ type: 'mpegts', isLive: kind === 'live', url: url },
-          { enableWorker: true, lazyLoad: false, liveBufferLatencyChasing: kind === 'live' });
-        mp.on(M.Events.MEDIA_INFO, function(mi){ if (mi){ seen.video = mi.videoCodec; seen.audio = mi.audioCodec; } });
-        mp.on(M.Events.ERROR, function(type, det, inf){
-          var why = 'mpegts.js: ' + type + (det ? ' / ' + det : '') + (inf && (inf.msg || inf.code) ? ' (' + (inf.msg || inf.code) + ')' : '');
-          if (type === M.ErrorTypes.NETWORK_ERROR) return fail('network', { detail: why });
-          // a track the browser can't decode (e.g. Dolby audio) fails here while the other may still play: wait and see
-          setTimeout(function(){
-            if (dead) return;
-            var mi = null; try { mi = mp.mediaInfo; } catch (e){}
-            if (mi){ seen.video = seen.video || mi.videoCodec; seen.audio = seen.audio || mi.audioCodec; }
-            if (video.readyState >= 2 && !video.error) return;   // still playing: the notice names the missing track
-            var bad = codecBad(seen.video, seen.audio);
-            fail(bad ? 'codec' : 'media', Object.assign({ detail: why }, bad || {}));
-          }, 2500);
-        });
-        mp.attachMediaElement(video); mp.load();
+        if (!window.mpegts || !window.mpegts.isSupported()) return fail('unsupported');
+        startTs();
       } else {
         video.src = url;
       }
       var p = video.play(); if (p && p.catch) p.catch(function(){});
     } catch (e){ fail('lib'); }
   })();
+  function startHls(lib){
+    var me = hls = new lib({ enableWorker: true });
+    hls.on(lib.Events.BUFFER_CODECS, function(e, d){ if (d && d.video) seen.video = d.video.codec; if (d && d.audio) seen.audio = d.audio.codec; });
+    hls.on(lib.Events.ERROR, function(e, d){
+      if (!d || !d.fatal || me !== hls || dead) return;
+      var http = d.response && d.response.code || 0;
+      var bad = codecBad(seen.video, seen.audio) || (d.details === 'manifestIncompatibleCodecsError' ? {} : null);
+      var why = 'hls.js: ' + d.details + (http ? ' (HTTP ' + http + ')' : '');
+      if (bad) return fail('codec', Object.assign({ detail: why }, bad));
+      // a corrupt stretch: hls.js rebuilds the media pipeline and continues
+      if (d.type === 'mediaError' && fixes < 3){ fixes++; status('recover', fixes); hls.recoverMediaError(); return; }
+      // live playlists are reloaded every few seconds from the address the server redirected to, whose token
+      // expires (HTTP 401 / 403): start again from the original address, which hands out a fresh one
+      if (d.type === 'networkError' && live && again(http)){ later(restartHls); return; }
+      fail(d.type === 'networkError' ? 'network' : 'media', { detail: why, http: http });
+    });
+    hls.loadSource(url); hls.attachMedia(video);
+    var q = video.play(); if (q && q.catch) q.catch(function(){});
+  }
+  function restartHls(){
+    if (dead) return;
+    var old = hls; hls = null;
+    try { if (old) old.destroy(); } catch (e){}
+    startHls(window.Hls);
+  }
+  function startTs(){
+    var M = window.mpegts, me;
+    me = mp = M.createPlayer({ type: 'mpegts', isLive: live, url: url },
+      { enableWorker: true, lazyLoad: false, liveBufferLatencyChasing: live });
+    mp.on(M.Events.MEDIA_INFO, function(mi){ if (mi){ seen.video = mi.videoCodec; seen.audio = mi.audioCodec; } });
+    // a live stream that simply ends means the server closed it: connect again
+    mp.on(M.Events.LOADING_COMPLETE, function(){ if (live && me === mp && !dead && again(0)) later(restartTs); });
+    mp.on(M.Events.ERROR, function(type, det, inf){
+      if (me !== mp || dead) return;
+      var http = inf && typeof inf.code === 'number' && inf.code >= 100 ? inf.code : 0;
+      var why = 'mpegts.js: ' + type + (det ? ' / ' + det : '') + (inf && (inf.msg || inf.code) ? ' (' + (inf.msg || inf.code) + ')' : '');
+      if (type === M.ErrorTypes.NETWORK_ERROR){
+        if (live && again(http)) return later(restartTs);
+        return fail('network', { detail: why, http: http });
+      }
+      // a track the browser can't decode (e.g. Dolby audio) fails here while the other may still play: wait and see
+      setTimeout(function(){
+        if (dead || me !== mp) return;
+        var mi = null; try { mi = mp.mediaInfo; } catch (e){}
+        if (mi){ seen.video = seen.video || mi.videoCodec; seen.audio = seen.audio || mi.audioCodec; }
+        if (video.readyState >= 2 && !video.error) return;   // still playing: the notice names the missing track
+        var bad = codecBad(seen.video, seen.audio);
+        if (bad) return fail('codec', Object.assign({ detail: why }, bad));
+        if (live && fixes < 3){ fixes++; status('recover', fixes); restartTs(); return; }
+        fail('media', { detail: why });
+      }, 2500);
+    });
+    mp.attachMediaElement(video); mp.load();
+    var q = video.play(); if (q && q.catch) q.catch(function(){});
+  }
+  function restartTs(){
+    if (dead) return;
+    var old = mp; mp = null;
+    try { if (old){ old.pause(); old.unload(); old.detachMediaElement(); old.destroy(); } } catch (e){}
+    startTs();
+  }
   var stop = function(){
     dead = true; video.onerror = null;
+    clearTimeout(retryTimer); clearTimeout(steadyTimer);
+    video.removeEventListener('playing', onPlaying);
     try { if (hls) hls.destroy(); } catch (e){}
     try { if (mp){ mp.pause(); mp.unload(); mp.detachMediaElement(); mp.destroy(); } } catch (e){}
     try { video.pause(); } catch (e){}
@@ -2573,7 +2658,8 @@ function showPlayerError(code){
   const p = state.player; if (!p) return;
   p.err = code;
   const a = code === 'codec' || mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
-  setPState('err', (p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : code === 'codec' ? codecText(p.codec) : (pmsg()[code] || t('pm.media'))) +
+  const ev = p.errInfo && p.errInfo.vars ? Object.fromEntries(Object.entries(p.errInfo.vars).map(([k, x]) => [k, typeof x === 'string' && x[0] === '@' ? t(x.slice(1)) : x])) : undefined;
+  setPState('err', (p.errInfo ? t(p.errInfo.key, ev) : code === 'codec' ? codecText(p.codec) : (pmsg()[code] || t('pm.media'))) +
     (p.tried && p.tried.length > 1 ? '\n' + t('pm.tried', { list: p.tried.join(' → ') }) : '') +
     ((p.errInfo && p.errInfo.extra) || p.detail ? '\n' + t('pm.details', { d: [p.errInfo && p.errInfo.extra, p.detail].filter(Boolean).join(' · ') }) : ''),
     `<div class="row" style="justify-content:center">${a ? `<button class="btn sm" type="button" data-pact="fmt">${esc(t('p.tryFmt', { f: a.label }))}</button>` : ''}<button class="btn sm" type="button" data-pact="vlc">${esc(t('p.vlc'))}</button><button class="btn sm" type="button" data-pact="copy">${esc(t('p.copy'))}</button></div>`);
@@ -2624,6 +2710,24 @@ function playSrcNow(e){
   if (!useProxy(e.url)) return null;
   return proxiedPlay(e);
 }
+const FETCH_FAILED = /Failed to fetch|NetworkError when|Load failed|TypeError/i;
+const nativeHls = () => { try { return !!document.createElement('video').canPlayType('application/vnd.apple.mpegurl'); } catch { return false; } };
+/* the gist of why one attempt failed, for the "Tried" line */
+function shortWhy(code, info){
+  if (info && info.http) return 'HTTP ' + info.http;
+  const d = (info && info.detail) || '';
+  const m = d.match(/\(([^()]{3,40})\)\s*$/); if (m) return m[1];
+  const me = d.match(/MediaError \d/); if (me) return me[0];
+  const h = d.match(/hls\.js: (\w+)/); if (h) return h[1];
+  return code === 'codec' ? '' : code;
+}
+/* does the server answer at all? (no-cors: only "something came back" is visible, which is all we need) */
+async function answers(url){
+  const c = new AbortController(); const tm = setTimeout(() => c.abort(), 8000);
+  try { await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: c.signal }); return true; }
+  catch { return c.signal.aborted ? null : false; }
+  finally { clearTimeout(tm); c.abort(); }   // a live stream would go on forever: stop once it has answered
+}
 /* a short name for each attempt, shown when a stream finally fails ("TS → HLS → HLS via the site proxy") */
 function srcLabel(u){
   const inner = isProxiedUrl(u) ? decodeURIComponent((u.match(/[?&]u=([^&#]+)/) || [])[1] || '') : u;
@@ -2632,7 +2736,7 @@ function srcLabel(u){
   return isProxiedUrl(u) ? t('p.viaProxy', { f }) : f;
 }
 /* why did a stream fail? first the account (connection limit, status), then — through the proxy — the server's answer */
-async function playDiagnosis(e, src, triedDirect, code){
+async function playDiagnosis(e, src, triedDirect, code, detail, netFail){
   if (e.acc){
     try {
       const info = infoFrom(await apiGet(e.acc, '', 15000));
@@ -2652,6 +2756,14 @@ async function playDiagnosis(e, src, triedDirect, code){
       return Object.assign(d || { key: code === 'decode' ? 'pm.decode' : 'pm.media' }, { extra });
     }
   }
+  // "Failed to fetch" hides two different things: a server that answers without CORS permission, or no answer at all
+  // (the last attempt may be the browser's own player, which reports an unreachable server as an unreadable file)
+  const probeUrl = code === 'network' && !isProxiedUrl(src) && FETCH_FAILED.test(detail || '') ? src : netFail;
+  if (probeUrl && !mixedBlocked(probeUrl)){
+    const reach = await answers(probeUrl);
+    if (reach === true) return { key: 'pm.cors', vars: { fix: ON_WEB ? '@pm.corsFixWeb' : '@pm.corsFixLocal' } };   // '@' = translated when shown
+    if (reach === false) return { key: 'pm.unreachable' };
+  }
   // the proxy's own report only helps when the browser had no direct way to the server
   return isProxiedUrl(src) && !triedDirect ? proxyDiagnosis(src) : null;
 }
@@ -2669,11 +2781,16 @@ async function planRoutes(e){
     routes.push({ url: e.url });
     const alt = altFormat(e);
     if (alt) routes.push({ url: alt.url, alt: true });
+    // live: one more direct try with the browser's own HLS player, which needs no CORS permission from the server
+    const m3u8 = e.kind === 'live' ? [e.url, alt && alt.url].find(u => /\.m3u8$/i.test(u || '')) : null;
+    if (m3u8 && nativeHls()) routes.push({ url: m3u8, alt: true, native: true });
   }
   if (ON_WEB && isHttp(e.url) && proxyAllowed() && await detectProxy()){
     const via = { url: e.url, proxy: true };
     // the proxy goes first only when the last channel needed it; the direct ways still follow if it fails
-    if (state.preferProxy && routes.length) routes.unshift(via); else routes.push(via);
+    // live channels always try the direct way first: through the proxy they become HLS, whose sessions the server
+    // keeps counted for a while, which can block the next channel on single-connection accounts
+    if (state.preferProxy && routes.length && e.kind !== 'live') routes.unshift(via); else routes.push(via);
   }
   return routes;
 }
@@ -2687,7 +2804,7 @@ async function playCurrent(retry){
   setPState('load', t(retry ? 'p.retry' : 'p.loading'));
   const v = $('#video');
   if (!retry){
-    p.tried = []; p.step = 0; p.direct = false; p.current = null;
+    p.tried = []; p.step = 0; p.direct = false; p.current = null; p.netFail = null;
     p.routes = await planRoutes(e);
     if (state.player !== p || p.token !== token) return;   // closed or moved on meanwhile
   }
@@ -2696,7 +2813,7 @@ async function playCurrent(retry){
   if (r.alt) e.url = r.url;
   const src = r.proxy ? proxiedPlay({ kind: e.kind, url: r.url }) : r.url;
   if (!r.proxy) p.direct = true;
-  p.current = r; p.tried.push(srcLabel(src));
+  p.current = r; p.tried.push(r.native ? t('p.native') : srcLabel(src));
   p.src = src; p.soundChecked = false; hideMsg($('#pNote'));
   updatePlayerUi();
   // films whose Dolby audio this browser can't play: compatibility mode, decided from the start of the file
@@ -2708,20 +2825,34 @@ async function playCurrent(retry){
     setPState('load', t(p.compat ? 'p.compatLoading' : 'p.loading'));
     if (p.compat) showMsg($('#pNote'), 'ok', t('p.compatOn', { list: codecNames(p.compat) }));
   }
-  const engine = p.compat ? cb => compatStream(v, src, cb) : cb => attachStream(v, src, e.kind, LIBS, cb);
+  const onStatus = (what, n) => { if (state.player === p && p.token === token && !p.err) setPState('load', t(what === 'recover' ? 'p.recover' : 'p.reconnect', { n })); };
+  const engine = p.compat ? cb => compatStream(v, src, cb) : cb => attachStream(v, src, e.kind, LIBS, cb, onStatus, { native: !!r.native });
   p.stop = engine((code, info) => {
     if (state.player !== p || p.token !== token || p.err) return;
     clearTimeout(p.timer);
+    // keep each attempt's reason: "HLS (HTTP 401) → TS (Failed to fetch)"
+    const why = shortWhy(code, info);
+    if (why && p.tried.length) p.tried[p.tried.length - 1] += ' (' + why + ')';
+    // remember a direct address the browser couldn't fetch at all: the final check asks whether its server answers
+    if (code === 'network' && !isProxiedUrl(src) && FETCH_FAILED.test((info && info.detail) || '')) p.netFail = p.netFail || src;
     // move on to the next way of playing it (another way can't fix a codec the browser lacks)
     let next = p.step + 1;
     if (code === 'media' || code === 'decode') while (p.routes[next] && p.routes[next].alt) next++;
-    if ((code === 'network' || code === 'media' || code === 'decode') && p.routes[next]){ p.step = next; playCurrent(true); return; }
+    const refused = info && [401, 403, 429, 458, 509].includes(info.http);
+    if ((code === 'network' || code === 'media' || code === 'decode') && p.routes[next]){
+      p.step = next;
+      // a refusal often clears once the server releases the previous connection: give it a moment
+      if (refused){ setPState('load', t('p.retry')); setTimeout(() => { if (state.player === p && p.token === token) playCurrent(true); }, 2500); }
+      else playCurrent(true);
+      return;
+    }
     if (code === 'codec') p.codec = info || {};
     p.detail = (info && info.detail) || '';
+    if (refused) p.errInfo = { key: 'pm.refused', vars: { s: info.http } };
     showPlayerError(code);
     if (p.diag || code === 'codec') return;
     p.diag = true;
-    playDiagnosis(e, src, p.direct, code).then(d => { if (d && state.player === p && p.token === token && p.err){ p.errInfo = d; showPlayerError(p.err); } });
+    playDiagnosis(e, src, p.direct, code, p.detail, p.netFail).then(d => { if (d && state.player === p && p.token === token && p.err){ p.errInfo = d; showPlayerError(p.err); } });
   });
   p.timer = setTimeout(() => {
     if (state.player !== p || p.token !== token || p.err || v.readyState >= 3) return;
