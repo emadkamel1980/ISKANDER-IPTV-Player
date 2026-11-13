@@ -722,8 +722,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.4.0',
-  released: '2026-11-13T03:10:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.5.0',
+  released: '2026-11-13T04:04:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -832,6 +832,9 @@ en: {
   'pm.pxStatus':'The IPTV server answered this stream with error {s} when the site’s proxy asked for it.\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
   'pm.pxNotMedia':'The IPTV server sent back a page instead of the video when the site’s proxy asked for it (HTTP {s}) — usually a refusal or a connection-limit message.\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
   'pm.pxMedia':'This video didn’t play through the site’s proxy.\nIf it plays in the local copy, allow “Insecure content” for this site (see Settings → Playback) and reload, so the browser loads it straight from your server.',
+  'p.retry':'Trying another way to reach the stream…','p.viaProxy':'{f} via the site proxy','pm.tried':'Tried: {list}',
+  'pm.limit':'Your account is already using all of its connections ({a} of {m}).\nStop playback on other devices or apps, wait a minute, then try again.',
+  'pm.accStatus':'The server reports this account as “{s}”, so it refuses streams.',
   'route.off':'This site uses https but this server uses http, so the browser will block the connection while the proxy is turned off (Settings → Playback).',
   'err.mixed':'The browser blocked the connection: this site is opened over a secure link (https) but the IPTV server uses http, and browsers don’t let a secure page load data from a non-secure server.\nFix: allow “Insecure content” for this site in the browser (see Settings → Playback), add the proxy file api/proxy.js to the site, use your provider’s https link if it has one, or open the app from the HTML file on your computer.',
   'err.mixedOff':'The browser blocked the connection: this site uses https and the IPTV server uses http. Turn on “Connection through the site proxy” in Settings → Playback.',
@@ -947,6 +950,9 @@ ar: {
   'pm.pxStatus':'سيرفر IPTV ردّ على هذا البث بالخطأ {s} عندما طلبه وسيط الموقع.\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
   'pm.pxNotMedia':'سيرفر IPTV أرسل صفحة بدلاً من الفيديو عندما طلبه وسيط الموقع (HTTP {s}) — غالباً رسالة رفض أو تجاوز لعدد الاتصالات.\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
   'pm.pxMedia':'لم يعمل هذا الفيديو عبر وسيط الموقع.\nلو كان يعمل في النسخة المحلية، اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل) وأعد تحميل الصفحة، ليحمّله المتصفح من السيرفر مباشرة.',
+  'p.retry':'جاري تجربة طريقة أخرى للوصول للبث…','p.viaProxy':'{f} عبر وسيط الموقع','pm.tried':'تمت تجربة: {list}',
+  'pm.limit':'حسابك يستخدم كل الاتصالات المسموحة له ({a} من {m}).\nأوقف التشغيل على الأجهزة أو التطبيقات الأخرى، وانتظر دقيقة، ثم حاول مرة أخرى.',
+  'pm.accStatus':'السيرفر يعرض حالة هذا الحساب «{s}»، لذلك يرفض البث.',
   'route.off':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال طالما الوسيط متوقف (الإعدادات ← التشغيل).',
   'err.mixed':'المتصفح منع الاتصال: الموقع مفتوح برابط آمن (https) بينما سيرفر IPTV يستخدم http، والمتصفحات لا تسمح لصفحة آمنة بجلب بيانات من سيرفر غير آمن.\nالحل: اسمح بـ«المحتوى غير الآمن» لهذا الموقع في المتصفح (التفاصيل في الإعدادات ← التشغيل)، أو أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم رابط https من مزوّد الخدمة إن وُجد، أو افتح البرنامج من ملف HTML على جهازك.',
   'err.mixedOff':'المتصفح منع الاتصال: الموقع يستخدم https والسيرفر يستخدم http. فعّل «الاتصال عبر وسيط الموقع» من الإعدادات ← التشغيل.',
@@ -1029,7 +1035,7 @@ function normalizeServer(input){
 }
 const outFmt = () => S.fmt === 'm3u8' ? 'm3u8' : 'ts';
 function getPhpUrl(acc){
-  return `${acc.server}/get.php?username=${enc(acc.username)}&password=${enc(acc.password)}&type=${S.plus ? 'm3u_plus' : 'm3u'}&output=${outFmt()}`;
+  return `${acc.server}/get.php?username=${enc(acc.username)}&password=${enc(acc.password)}&type=${S.plus ? 'm3u_plus' : 'm3u'}&output=${liveFmt(acc)}`;
 }
 const xmltvUrl = acc => `${acc.server}/xmltv.php?username=${enc(acc.username)}&password=${enc(acc.password)}`;
 const apiBase = acc => `${acc.server}/player_api.php?username=${enc(acc.username)}&password=${enc(acc.password)}`;
@@ -1799,8 +1805,18 @@ function renderEpisodes(season){
 /* =====================================================================
    Playlist builder / export
    ===================================================================== */
+/* the live format an account may use: the chosen one, unless the server only allows the other */
+function liveFmt(acc, info){
+  const f = outFmt();
+  const listed = acc && state.accounts.find(a => accKey(a) === accKey(acc));
+  const inf = info || (listed && listed.info) || (acc && acc.info);
+  const allowed = inf && inf.formats && inf.formats.length ? inf.formats.map(x => String(x).toLowerCase()) : null;
+  if (!allowed || allowed.includes(f)) return f;
+  const other = f === 'ts' ? 'm3u8' : 'ts';
+  return allowed.includes(other) ? other : f;
+}
 function streamUrl(src, it){
-  const fmt = outFmt();
+  const fmt = it.kind === 'live' && !it.imported && src.acc ? liveFmt(src.acc, src.info) : outFmt();
   if (it.imported) return it.kind === 'live' ? it.url.replace(/(\/live\/[^/]+\/[^/]+\/\d+)\.(?:ts|m3u8)$/i, `$1.${fmt}`) : it.url;
   const a = src.acc;
   if (it.kind === 'live') return `${a.server}/live/${enc(a.username)}/${enc(a.password)}/${it.id}.${fmt}`;
@@ -2069,7 +2085,7 @@ function tickDownloads(){
 }
 
 function entryFor(src, it){
-  return { title: it.name, url: streamUrl(src, it), kind: it.kind === 'live' ? 'live' : it.kind === 'episode' ? 'episode' : 'movie', logo: it.logo, sub: grp(it.group) };
+  return { title: it.name, url: streamUrl(src, it), kind: it.kind === 'live' ? 'live' : it.kind === 'episode' ? 'episode' : 'movie', logo: it.logo, sub: grp(it.group), acc: src.acc };
 }
 function playFromGrid(si, ii){
   const refs = currentList().filter(([s, i]) => state.sources[s].items[i].kind !== 'series');
@@ -2078,7 +2094,7 @@ function playFromGrid(si, ii){
   openPlayer(list.map(([s, i]) => entryFor(state.sources[s], state.sources[s].items[i])), idx);
 }
 function playEpisode(src, series, index){
-  openPlayer((series.episodes || []).map(ep => ({ title: epName(series, ep), url: episodeUrl(src, ep), kind: 'episode', logo: ep.img || series.logo, sub: series.name })), index);
+  openPlayer((series.episodes || []).map(ep => ({ title: epName(series, ep), url: episodeUrl(src, ep), kind: 'episode', logo: ep.img || series.logo, sub: series.name, acc: src.acc })), index);
 }
 function altFormat(e){
   if (e.kind !== 'live') return null;
@@ -2115,7 +2131,8 @@ function showPlayerError(code){
   const p = state.player; if (!p) return;
   p.err = code;
   const a = mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
-  setPState('err', p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : (pmsg()[code] || t('pm.media')),
+  setPState('err', (p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : (pmsg()[code] || t('pm.media'))) +
+    (p.tried && p.tried.length > 1 ? '\n' + t('pm.tried', { list: p.tried.join(' → ') }) : ''),
     `<div class="row" style="justify-content:center">${a ? `<button class="btn sm" type="button" data-pact="fmt">${esc(t('p.tryFmt', { f: a.label }))}</button>` : ''}<button class="btn sm" type="button" data-pact="vlc">${esc(t('p.vlc'))}</button><button class="btn sm" type="button" data-pact="copy">${esc(t('p.copy'))}</button></div>`);
 }
 function updatePlayerUi(){
@@ -2157,34 +2174,78 @@ async function proxyDiagnosis(src, depth = 0){
   } catch { return null; }
 }
 /* the address the player really loads: through the site's proxy when the browser would block the stream */
+// through the proxy, live TV is taken as HLS: short segment requests instead of one endless stream
+const proxiedPlay = e => proxied(e.kind === 'live' ? e.url.replace(/(\/live\/[^/]+\/[^/]+\/\d+)\.ts$/i, '$1.m3u8') : e.url);
 function playSrcNow(e){
   if (!mixedBlocked(e.url)) return e.url;
   if (!useProxy(e.url)) return null;
-  // through the proxy, live TV is taken as HLS: short segment requests instead of one endless stream
-  return proxied(e.kind === 'live' ? e.url.replace(/(\/live\/[^/]+\/[^/]+\/\d+)\.ts$/i, '$1.m3u8') : e.url);
+  return proxiedPlay(e);
+}
+/* a short name for each attempt, shown when a stream finally fails ("TS → HLS → HLS via the site proxy") */
+function srcLabel(u){
+  const inner = isProxiedUrl(u) ? decodeURIComponent((u.match(/[?&]u=([^&#]+)/) || [])[1] || '') : u;
+  const ext = ((inner.split(/[?#]/)[0].match(/\.([a-z0-9]+)$/i) || [])[1] || '').toLowerCase();
+  const f = ext === 'm3u8' ? 'HLS' : ext === 'ts' ? 'TS' : (ext.toUpperCase() || '—');
+  return isProxiedUrl(u) ? t('p.viaProxy', { f }) : f;
+}
+/* why did a stream fail? first the account (connection limit, status), then — through the proxy — the server's answer */
+async function playDiagnosis(e, src){
+  if (e.acc){
+    try {
+      const info = infoFrom(await apiGet(e.acc, '', 15000));
+      storeInfo(e.acc, info);
+      if (!info.auth) return { key: 'err.denied' };
+      if (info.status && !/^active$/i.test(info.status)) return { key: 'pm.accStatus', vars: { s: info.status } };
+      if (info.max && info.active >= info.max) return { key: 'pm.limit', vars: { a: nf(info.active), m: nf(info.max) } };
+    } catch {}
+  }
+  return isProxiedUrl(src) ? proxyDiagnosis(src) : null;
 }
 async function playSrc(e){
   await ensureDirect(e.url);
   if (mixedBlocked(e.url) && proxyAllowed()) await detectProxy();
   return playSrcNow(e);
 }
-async function playCurrent(){
+async function playCurrent(retry){
   const p = state.player; if (!p) return;
   stopPlayback(); p.err = null; p.errInfo = null; p.diag = false;
   const e = p.list[p.index];
+  if (!retry){
+    p.tries = { alt: false, proxy: false }; p.tried = [];
+    // once a stream only played through the proxy, go there first for the next ones
+    p.forceProxy = !!state.preferProxy && ON_WEB && isHttp(e.url) && proxyAllowed();
+  }
   $('#pLogo').innerHTML = e.logo ? `<img src="${esc(mediaUrl(e.logo))}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
   updatePlayerUi();
-  setPState('load', t('p.loading'));
+  setPState('load', t(retry ? 'p.retry' : 'p.loading'));
   const v = $('#video');
-  const src = await playSrc(e);
+  const src = p.forceProxy && (PROXY.ok || await detectProxy()) ? proxiedPlay(e) : await playSrc(e);
   if (state.player !== p || p.list[p.index] !== e || p.stop) return;   // closed or moved on meanwhile
   if (!src){ showPlayerError('mixed'); return; }
+  p.tried.push(srcLabel(src));
   p.stop = attachStream(v, src, e.kind, LIBS, code => {
-    if (state.player !== p) return; clearTimeout(p.timer); showPlayerError(code);
-    // through the proxy, find out what the IPTV server really answered
-    if (isProxiedUrl(src) && !p.diag){
+    if (state.player !== p || p.list[p.index] !== e || p.err || p.retrying) return;
+    clearTimeout(p.timer);
+    const direct = !isProxiedUrl(src);
+    // 1) live TV: a server may refuse one format and still serve the other
+    const alt = direct && code === 'network' && !p.tries.alt && altFormat(e);
+    if (alt){ p.tries.alt = true; e.url = alt.url; playCurrent(true); return; }
+    // 2) on a website, a stream the browser could not load directly may still come through the site's proxy
+    if (direct && (code === 'network' || code === 'media') && !p.tries.proxy && ON_WEB && isHttp(e.url) && proxyAllowed()){
+      p.tries.proxy = true; p.retrying = true; setPState('load', t('p.retry'));
+      detectProxy().then(ok => {
+        p.retrying = false;
+        if (state.player !== p || p.list[p.index] !== e) return;
+        if (ok){ p.forceProxy = true; playCurrent(true); } else failNow();
+      });
+      return;
+    }
+    failNow();
+    function failNow(){
+      showPlayerError(code);
+      if (p.diag) return;
       p.diag = true;
-      proxyDiagnosis(src).then(d => { if (d && state.player === p && p.list[p.index] === e && p.err){ p.errInfo = d; showPlayerError(p.err); } });
+      playDiagnosis(e, src).then(d => { if (d && state.player === p && p.list[p.index] === e && p.err){ p.errInfo = d; showPlayerError(p.err); } });
     }
   });
   p.timer = setTimeout(() => { if (state.player === p && !p.err && v.readyState < 3) setPState('load', t('pm.timeout')); }, 20000);
@@ -2236,7 +2297,11 @@ function popout(){
   try { w.focus(); } catch {}
 }
 const videoEl = $('#video');
-videoEl.addEventListener('playing', () => { if (state.player){ clearTimeout(state.player.timer); setPState(null); } });
+videoEl.addEventListener('playing', () => {
+  if (!state.player) return;
+  clearTimeout(state.player.timer); setPState(null);
+  if (state.player.forceProxy) state.preferProxy = true;
+});
 videoEl.addEventListener('waiting', () => { if (state.player && !state.player.err) setPState('load', t('p.loading')); });
 videoEl.addEventListener('ended', () => { const p = state.player; if (S.autoNext && p && p.list[p.index].kind === 'episode' && p.index < p.list.length - 1) playerStep(1); });
 
