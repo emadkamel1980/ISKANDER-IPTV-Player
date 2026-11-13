@@ -642,7 +642,7 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
           <label class="chk"><input type="checkbox" data-set="autoNext"> <span data-i18n="pb.enabled"></span></label>
         </div>
         <div class="setrow">
-          <div><b data-i18n="pb.proxy"></b><p class="hint" data-i18n="pb.proxyHint"></p><p class="hint"><span class="badge muted" id="proxyStatus"></span></p></div>
+          <div><b data-i18n="pb.proxy"></b><p class="hint" data-i18n="pb.proxyHint"></p><p class="hint" data-i18n="pb.directHow"></p><p class="hint row" style="gap:6px"><span class="badge muted" id="proxyStatus"></span><span class="badge muted" id="directStatus"></span></p></div>
           <div class="seg">
             <label><input type="radio" name="proxy" value="auto" data-set="proxy"> <span data-i18n="pb.proxyAuto"></span></label>
             <label><input type="radio" name="proxy" value="off" data-set="proxy"> <span data-i18n="pb.proxyOff"></span></label>
@@ -722,8 +722,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.3.0',
-  released: '2026-11-13T02:14:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.4.0',
+  released: '2026-11-13T03:10:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -823,14 +823,22 @@ en: {
   'pb.proxyAuto':'Automatic','pb.proxyOff':'Off',
   'px.st.on':'Proxy found on this site (api/proxy)','px.st.none':'No proxy on this site','px.st.off':'Turned off','px.st.local':'Not needed — opened from a file on this device','px.st.checking':'Checking…',
   'route.on':'This site uses https and this server uses http, so the connection goes through the site’s proxy.',
-  'route.none':'This site uses https but this server uses http, so the browser will block the connection.\nFix: add the proxy file api/proxy.js to the site, use your provider’s https link if it has one, or open the app from the HTML file on your computer.',
+  'route.none':'This site uses https but this server uses http, so the browser will block the connection.\nFix: allow “Insecure content” for this site in the browser (see Settings → Playback), add the proxy file api/proxy.js to the site, or open the app from the HTML file on your computer.',
+  'route.direct':'This site uses https, but the browser allows it to load http content, so the app connects straight to this server — like the local copy.',
+  'pb.directHow':'Most reliable on an https site: let the browser connect straight to your server. In Chrome or Edge on a computer, click the icon at the left of the address bar → Site settings → Insecure content → Allow, then reload this page. The app then works like the local copy — videos come straight to your device, without the proxy. This lowers protection for this one site only.',
+  'dx.st.yes':'Direct connection: allowed by the browser','dx.st.no':'Direct connection: blocked by the browser','dx.st.na':'Direct connection: not needed here','dx.st.unknown':'Direct connection: not checked yet — add a server first','dx.st.checking':'Direct connection: checking…',
+  'pm.px':'The site’s proxy could not load this stream: {m}\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
+  'pm.pxRefused':'The IPTV server refused this stream when the site’s proxy asked for it (HTTP {s}). Many providers block streaming to cloud servers such as Vercel, limit connections, or tie each stream to one address.\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
+  'pm.pxStatus':'The IPTV server answered this stream with error {s} when the site’s proxy asked for it.\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
+  'pm.pxNotMedia':'The IPTV server sent back a page instead of the video when the site’s proxy asked for it (HTTP {s}) — usually a refusal or a connection-limit message.\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
+  'pm.pxMedia':'This video didn’t play through the site’s proxy.\nIf it plays in the local copy, allow “Insecure content” for this site (see Settings → Playback) and reload, so the browser loads it straight from your server.',
   'route.off':'This site uses https but this server uses http, so the browser will block the connection while the proxy is turned off (Settings → Playback).',
-  'err.mixed':'The browser blocked the connection: this site is opened over a secure link (https) but the IPTV server uses http, and browsers don’t let a secure page load data from a non-secure server.\nFix: add the proxy file api/proxy.js to the site, use your provider’s https link if it has one, or open the app from the HTML file on your computer.',
+  'err.mixed':'The browser blocked the connection: this site is opened over a secure link (https) but the IPTV server uses http, and browsers don’t let a secure page load data from a non-secure server.\nFix: allow “Insecure content” for this site in the browser (see Settings → Playback), add the proxy file api/proxy.js to the site, use your provider’s https link if it has one, or open the app from the HTML file on your computer.',
   'err.mixedOff':'The browser blocked the connection: this site uses https and the IPTV server uses http. Turn on “Connection through the site proxy” in Settings → Playback.',
   'err.proxy':'The site’s proxy could not complete the request: {m}',
   'px.unreachable':'it could not reach the IPTV server. Some providers block connections that come from cloud servers such as Vercel.',
   'px.timeout':'the IPTV server did not answer in time.',
-  'pm.mixed':'The browser blocks this stream: the site uses https and the stream uses http.\nAdd the proxy file api/proxy.js to the site, or use “Play in VLC”.',
+  'pm.mixed':'The browser blocks this stream: the site uses https and the stream uses http.\nAllow “Insecure content” for this site (see Settings → Playback), add the proxy file api/proxy.js to the site, or use “Play in VLC”.',
   'p.popMixed':'The browser blocks this stream on an https site. Add api/proxy.js to the site, or use “Play in VLC”.',
   'dl.mixed':'Download handed to the browser. Because the site uses https and the server uses http, the browser may say the file can’t be downloaded securely — choose “Keep” to continue.',
   'about.desc':'A web-based IPTV player and M3U/M3U8 playlist generator for Xtream Codes servers. It runs entirely in your browser — your details are sent only to your own IPTV server.',
@@ -930,14 +938,22 @@ ar: {
   'pb.proxyAuto':'تلقائي','pb.proxyOff':'إيقاف',
   'px.st.on':'الوسيط موجود على هذا الموقع (api/proxy)','px.st.none':'لا يوجد وسيط على هذا الموقع','px.st.off':'متوقف','px.st.local':'غير مطلوب — البرنامج مفتوح من ملف على هذا الجهاز','px.st.checking':'جاري الفحص…',
   'route.on':'الموقع يستخدم https والسيرفر يستخدم http، لذلك يتم الاتصال عبر وسيط الموقع.',
-  'route.none':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال.\nالحل: أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم رابط https من مزوّد الخدمة إن وُجد، أو افتح البرنامج من ملف HTML على جهازك.',
+  'route.none':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال.\nالحل: اسمح بـ«المحتوى غير الآمن» لهذا الموقع في المتصفح (التفاصيل في الإعدادات ← التشغيل)، أو أضف ملف الوسيط api/proxy.js إلى الموقع، أو افتح البرنامج من ملف HTML على جهازك.',
+  'route.direct':'الموقع يستخدم https لكن المتصفح يسمح له بتحميل محتوى http، لذلك يتصل البرنامج بالسيرفر مباشرة — مثل النسخة المحلية.',
+  'pb.directHow':'الحل الأضمن على موقع https: اسمح للمتصفح بالاتصال بسيرفرك مباشرة. في Chrome أو Edge على الكمبيوتر: اضغط على الأيقونة يسار شريط العنوان ← إعدادات الموقع ← «المحتوى غير الآمن» (Insecure content) ← السماح، ثم أعد تحميل الصفحة. بعدها يعمل البرنامج مثل النسخة المحلية تماماً — الفيديو يصل لجهازك من السيرفر مباشرة دون المرور بالوسيط. هذا يخفف الحماية لهذا الموقع وحده فقط.',
+  'dx.st.yes':'الاتصال المباشر: مسموح من المتصفح','dx.st.no':'الاتصال المباشر: ممنوع من المتصفح','dx.st.na':'الاتصال المباشر: غير مطلوب هنا','dx.st.unknown':'الاتصال المباشر: لم يُفحص بعد — أضف سيرفراً أولاً','dx.st.checking':'الاتصال المباشر: جاري الفحص…',
+  'pm.px':'وسيط الموقع لم يستطع تحميل هذا البث: {m}\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
+  'pm.pxRefused':'سيرفر IPTV رفض هذا البث عندما طلبه وسيط الموقع (HTTP {s}). كثير من المزوّدين يمنعون البث للسيرفرات السحابية مثل Vercel، أو يحددون عدد الاتصالات، أو يربطون كل بث بعنوان واحد.\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
+  'pm.pxStatus':'سيرفر IPTV ردّ على هذا البث بالخطأ {s} عندما طلبه وسيط الموقع.\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
+  'pm.pxNotMedia':'سيرفر IPTV أرسل صفحة بدلاً من الفيديو عندما طلبه وسيط الموقع (HTTP {s}) — غالباً رسالة رفض أو تجاوز لعدد الاتصالات.\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
+  'pm.pxMedia':'لم يعمل هذا الفيديو عبر وسيط الموقع.\nلو كان يعمل في النسخة المحلية، اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل) وأعد تحميل الصفحة، ليحمّله المتصفح من السيرفر مباشرة.',
   'route.off':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال طالما الوسيط متوقف (الإعدادات ← التشغيل).',
-  'err.mixed':'المتصفح منع الاتصال: الموقع مفتوح برابط آمن (https) بينما سيرفر IPTV يستخدم http، والمتصفحات لا تسمح لصفحة آمنة بجلب بيانات من سيرفر غير آمن.\nالحل: أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم رابط https من مزوّد الخدمة إن وُجد، أو افتح البرنامج من ملف HTML على جهازك.',
+  'err.mixed':'المتصفح منع الاتصال: الموقع مفتوح برابط آمن (https) بينما سيرفر IPTV يستخدم http، والمتصفحات لا تسمح لصفحة آمنة بجلب بيانات من سيرفر غير آمن.\nالحل: اسمح بـ«المحتوى غير الآمن» لهذا الموقع في المتصفح (التفاصيل في الإعدادات ← التشغيل)، أو أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم رابط https من مزوّد الخدمة إن وُجد، أو افتح البرنامج من ملف HTML على جهازك.',
   'err.mixedOff':'المتصفح منع الاتصال: الموقع يستخدم https والسيرفر يستخدم http. فعّل «الاتصال عبر وسيط الموقع» من الإعدادات ← التشغيل.',
   'err.proxy':'وسيط الموقع لم يستطع إتمام الطلب: {m}',
   'px.unreachable':'لم يستطع الوصول لسيرفر IPTV. بعض المزوّدين يمنعون الاتصالات القادمة من السيرفرات السحابية مثل Vercel.',
   'px.timeout':'سيرفر IPTV لم يرد في الوقت المحدد.',
-  'pm.mixed':'المتصفح يمنع هذا البث: الموقع يستخدم https والبث يستخدم http.\nأضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم «تشغيل في VLC».',
+  'pm.mixed':'المتصفح يمنع هذا البث: الموقع يستخدم https والبث يستخدم http.\nاسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، أو أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم «تشغيل في VLC».',
   'p.popMixed':'المتصفح يمنع هذا البث على موقع https. أضف api/proxy.js إلى الموقع، أو استخدم «تشغيل في VLC».',
   'dl.mixed':'تم تحويل التحميل إلى المتصفح. لأن الموقع يستخدم https والسيرفر يستخدم http، قد يقول المتصفح إن الملف لا يمكن تحميله بأمان — اختر «الاحتفاظ» (Keep) للمتابعة.',
   'about.desc':'مشغّل IPTV على الويب ومولّد قوائم M3U/M3U8 لسيرفرات Xtream Codes. يعمل بالكامل داخل متصفحك — لا يتم إرسال بياناتك لأي جهة غير سيرفر الاشتراك الخاص بك.',
@@ -1025,7 +1041,22 @@ const SECURE_PAGE = location.protocol === 'https:';
 const ON_WEB = /^https?:$/.test(location.protocol);
 const PROXY = { state: 'unknown', ok: false, promise: null };   // unknown | checking | on | none
 const isHttp = u => /^http:\/\//i.test(String(u || ''));
-const mixedBlocked = u => SECURE_PAGE && isHttp(u);
+/* when the viewer allows "Insecure content" for this site, the browser can reach http servers directly — like the local copy */
+const DIRECT = { state: 'unknown', tried: new Map() };   // unknown | yes | no
+const mixedBlocked = u => SECURE_PAGE && isHttp(u) && DIRECT.state !== 'yes';
+function ensureDirect(u){
+  if (!SECURE_PAGE || !isHttp(u) || DIRECT.state === 'yes') return Promise.resolve();
+  let origin; try { origin = new URL(u).origin; } catch { return Promise.resolve(); }
+  if (!DIRECT.tried.has(origin)) DIRECT.tried.set(origin, (async () => {
+    try {
+      await fetch(origin + '/player_api.php', { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(6000) });
+      DIRECT.state = 'yes';
+    } catch { if (DIRECT.state !== 'yes') DIRECT.state = 'no'; }
+    renderProxyStatus();
+    if (DIRECT.state === 'yes' && state.sources.length) renderLib();
+  })());
+  return DIRECT.tried.get(origin);
+}
 const proxyAllowed = () => ON_WEB && S.proxy !== 'off';
 const proxied = u => location.origin + '/api/proxy?u=' + enc(u);
 const useProxy = u => mixedBlocked(u) && proxyAllowed() && PROXY.ok;
@@ -1050,11 +1081,17 @@ function renderProxyStatus(){
   const el = $('#proxyStatus');
   el.textContent = t('px.st.' + st);
   el.className = 'badge ' + ({ on: 'ok', none: 'warn' }[st] || 'muted');
+  const ds = !SECURE_PAGE ? 'na' : DIRECT.state === 'yes' ? 'yes' : DIRECT.state === 'no' ? 'no' : DIRECT.tried.size ? 'checking' : 'unknown';
+  const de = $('#directStatus');
+  de.textContent = t('dx.st.' + ds);
+  de.className = 'badge ' + ({ yes: 'ok', no: 'warn' }[ds] || 'muted');
   renderRouteNote();
 }
 function renderRouteNote(){
   const el = $('#routeNote');
-  if (!mixedBlocked(formAccount().server)){ hideMsg(el); return; }
+  const server = formAccount().server;
+  if (SECURE_PAGE && isHttp(server) && DIRECT.state === 'yes'){ showMsg(el, 'ok', t('route.direct')); return; }
+  if (!mixedBlocked(server)){ hideMsg(el); return; }
   if (!proxyAllowed()) showMsg(el, 'warn', t('route.off'));
   else if (PROXY.state === 'on') showMsg(el, 'ok', t('route.on'));
   else if (PROXY.state === 'none') showMsg(el, 'warn', t('route.none'));
@@ -1354,6 +1391,7 @@ function storeInfo(acc, info, error){
 async function apiGet(acc, action, timeoutMs = 60000){
   const url = apiBase(acc) + (action ? '&action=' + action : '');
   let via = false;
+  await ensureDirect(url);
   if (mixedBlocked(url)){
     if (!(proxyAllowed() && await detectProxy())) throw new FriendlyError(t(proxyAllowed() ? 'err.mixed' : 'err.mixedOff'));
     via = true;
@@ -1954,6 +1992,7 @@ function addJob(j){
 async function startDownload(e){
   const name = safeFile(e.title, e.ext || extOf(e.url));
   // a page on https can't read an http file; the browser downloads it itself (and may ask to confirm)
+  await ensureDirect(e.url);
   if (mixedBlocked(e.url)){ directDownload(e.url, name); toast(t('dl.mixed')); return; }
   if (typeof window.showSaveFilePicker !== 'function'){ directDownload(e.url, name); toast(t('dl.direct')); return; }
   let handle;
@@ -2076,7 +2115,7 @@ function showPlayerError(code){
   const p = state.player; if (!p) return;
   p.err = code;
   const a = mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
-  setPState('err', pmsg()[code] || t('pm.media'),
+  setPState('err', p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : (pmsg()[code] || t('pm.media')),
     `<div class="row" style="justify-content:center">${a ? `<button class="btn sm" type="button" data-pact="fmt">${esc(t('p.tryFmt', { f: a.label }))}</button>` : ''}<button class="btn sm" type="button" data-pact="vlc">${esc(t('p.vlc'))}</button><button class="btn sm" type="button" data-pact="copy">${esc(t('p.copy'))}</button></div>`);
 }
 function updatePlayerUi(){
@@ -2092,6 +2131,31 @@ function updatePlayerUi(){
   $('#pPip').classList.toggle('hidden', !document.pictureInPictureEnabled);
   if (p.err) showPlayerError(p.err);
 }
+/* when a stream fails through the proxy: ask for its first bytes and report what the IPTV server answered */
+const isProxiedUrl = u => /\/api\/proxy\?u=/.test(String(u));
+async function proxyDiagnosis(src, depth = 0){
+  try {
+    const r = await fetch(src, { headers: { Range: 'bytes=0-4095' }, cache: 'no-store', signal: AbortSignal.timeout(20000) });
+    if (r.headers.get('x-iskander-proxy') === 'error'){
+      let j = {}; try { j = await r.json(); } catch {}
+      const k = 'px.' + j.code;
+      return { key: 'pm.px', vars: { m: I18N.en[k] ? t(k) : (j.error || 'HTTP ' + r.status) } };
+    }
+    if (r.status === 401 || r.status === 403 || r.status === 429) return { key: 'pm.pxRefused', vars: { s: r.status } };
+    if (!r.ok) return { key: 'pm.pxStatus', vars: { s: r.status } };
+    if (/mpegurl/i.test(r.headers.get('content-type') || '')){
+      // the playlist itself came through: check the first variant or segment it points to
+      const next = (await r.text()).split(/\r?\n/).map(s => s.trim()).find(s => s && !s.startsWith('#'));
+      return next && depth < 2 ? proxyDiagnosis(new URL(next, location.href).href, depth + 1) : { key: 'pm.pxMedia' };
+    }
+    const rd = r.body && r.body.getReader();
+    const first = rd ? (await rd.read()).value : null;
+    if (rd) rd.cancel().catch(() => {});
+    const head = first ? new TextDecoder().decode(first.subarray(0, 64)).trim() : '';
+    if (/^(?:<|\{|\[)/.test(head)) return { key: 'pm.pxNotMedia', vars: { s: r.status } };
+    return { key: 'pm.pxMedia' };
+  } catch { return null; }
+}
 /* the address the player really loads: through the site's proxy when the browser would block the stream */
 function playSrcNow(e){
   if (!mixedBlocked(e.url)) return e.url;
@@ -2100,12 +2164,13 @@ function playSrcNow(e){
   return proxied(e.kind === 'live' ? e.url.replace(/(\/live\/[^/]+\/[^/]+\/\d+)\.ts$/i, '$1.m3u8') : e.url);
 }
 async function playSrc(e){
+  await ensureDirect(e.url);
   if (mixedBlocked(e.url) && proxyAllowed()) await detectProxy();
   return playSrcNow(e);
 }
 async function playCurrent(){
   const p = state.player; if (!p) return;
-  stopPlayback(); p.err = null;
+  stopPlayback(); p.err = null; p.errInfo = null; p.diag = false;
   const e = p.list[p.index];
   $('#pLogo').innerHTML = e.logo ? `<img src="${esc(mediaUrl(e.logo))}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
   updatePlayerUi();
@@ -2114,7 +2179,14 @@ async function playCurrent(){
   const src = await playSrc(e);
   if (state.player !== p || p.list[p.index] !== e || p.stop) return;   // closed or moved on meanwhile
   if (!src){ showPlayerError('mixed'); return; }
-  p.stop = attachStream(v, src, e.kind, LIBS, code => { if (state.player !== p) return; clearTimeout(p.timer); showPlayerError(code); });
+  p.stop = attachStream(v, src, e.kind, LIBS, code => {
+    if (state.player !== p) return; clearTimeout(p.timer); showPlayerError(code);
+    // through the proxy, find out what the IPTV server really answered
+    if (isProxiedUrl(src) && !p.diag){
+      p.diag = true;
+      proxyDiagnosis(src).then(d => { if (d && state.player === p && p.list[p.index] === e && p.err){ p.errInfo = d; showPlayerError(p.err); } });
+    }
+  });
   p.timer = setTimeout(() => { if (state.player === p && !p.err && v.readyState < 3) setPState('load', t('pm.timeout')); }, 20000);
 }
 function playerStep(d){
@@ -2383,6 +2455,7 @@ route();
 if (state.accounts.length) checkAll(true);
 renderProxyStatus();
 if (proxyAllowed()) detectProxy().then(() => { renderProxyStatus(); if (PROXY.ok && SECURE_PAGE) renderLib(); });
+{ const a = state.accounts.find(x => isHttp(x.server)); if (a) ensureDirect(a.server); }
 })();
 </script>
 </body>
