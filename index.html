@@ -592,6 +592,7 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
         </div>
 
         <div class="linkbox placeholder" id="linkPreview"></div>
+        <div class="msg" id="routeNote"></div>
 
         <div class="row mt">
           <button class="btn primary" id="btnAdd" type="button"></button>
@@ -639,6 +640,13 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
         <div class="setrow">
           <div><b data-i18n="pb.autoNext"></b><p class="hint" data-i18n="pb.autoNextHint"></p></div>
           <label class="chk"><input type="checkbox" data-set="autoNext"> <span data-i18n="pb.enabled"></span></label>
+        </div>
+        <div class="setrow">
+          <div><b data-i18n="pb.proxy"></b><p class="hint" data-i18n="pb.proxyHint"></p><p class="hint"><span class="badge muted" id="proxyStatus"></span></p></div>
+          <div class="seg">
+            <label><input type="radio" name="proxy" value="auto" data-set="proxy"> <span data-i18n="pb.proxyAuto"></span></label>
+            <label><input type="radio" name="proxy" value="off" data-set="proxy"> <span data-i18n="pb.proxyOff"></span></label>
+          </div>
         </div>
       </section>
 
@@ -714,8 +722,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.2.0',
-  released: '2026-11-13T00:08:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.3.0',
+  released: '2026-11-13T02:14:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -811,6 +819,20 @@ en: {
   't.linkCopied':'M3U link copied ✓',
   'pb.fmt':'Default live stream format','pb.fmtHint':'TS works with most servers; HLS (m3u8) suits some servers and Safari. Also used for exported links.',
   'pb.autoNext':'Auto-play next episode','pb.autoNextHint':'When an episode ends, the next one starts automatically.','pb.enabled':'Enabled',
+  'pb.proxy':'Connection through the site proxy','pb.proxyHint':'Only used when the site is opened over https (for example on Vercel) and the IPTV server uses http, which browsers block. Requests then pass through your own site, so the provider sees the site’s server address instead of yours.',
+  'pb.proxyAuto':'Automatic','pb.proxyOff':'Off',
+  'px.st.on':'Proxy found on this site (api/proxy)','px.st.none':'No proxy on this site','px.st.off':'Turned off','px.st.local':'Not needed — opened from a file on this device','px.st.checking':'Checking…',
+  'route.on':'This site uses https and this server uses http, so the connection goes through the site’s proxy.',
+  'route.none':'This site uses https but this server uses http, so the browser will block the connection.\nFix: add the proxy file api/proxy.js to the site, use your provider’s https link if it has one, or open the app from the HTML file on your computer.',
+  'route.off':'This site uses https but this server uses http, so the browser will block the connection while the proxy is turned off (Settings → Playback).',
+  'err.mixed':'The browser blocked the connection: this site is opened over a secure link (https) but the IPTV server uses http, and browsers don’t let a secure page load data from a non-secure server.\nFix: add the proxy file api/proxy.js to the site, use your provider’s https link if it has one, or open the app from the HTML file on your computer.',
+  'err.mixedOff':'The browser blocked the connection: this site uses https and the IPTV server uses http. Turn on “Connection through the site proxy” in Settings → Playback.',
+  'err.proxy':'The site’s proxy could not complete the request: {m}',
+  'px.unreachable':'it could not reach the IPTV server. Some providers block connections that come from cloud servers such as Vercel.',
+  'px.timeout':'the IPTV server did not answer in time.',
+  'pm.mixed':'The browser blocks this stream: the site uses https and the stream uses http.\nAdd the proxy file api/proxy.js to the site, or use “Play in VLC”.',
+  'p.popMixed':'The browser blocks this stream on an https site. Add api/proxy.js to the site, or use “Play in VLC”.',
+  'dl.mixed':'Download handed to the browser. Because the site uses https and the server uses http, the browser may say the file can’t be downloaded securely — choose “Keep” to continue.',
   'about.desc':'A web-based IPTV player and M3U/M3U8 playlist generator for Xtream Codes servers. It runs entirely in your browser — your details are sent only to your own IPTV server.',
   'about.version':'Version','about.released':'Release date & time','about.dev':'Developer',
   'about.libs':'Playback uses the open-source hls.js and mpegts.js libraries, loaded from the internet the first time you play a live stream.',
@@ -904,6 +926,20 @@ ar: {
   't.linkCopied':'تم نسخ رابط M3U ✓',
   'pb.fmt':'صيغة البث المباشر الافتراضية','pb.fmtHint':'صيغة TS تعمل مع أغلب السيرفرات، و HLS (m3u8) مناسبة لبعض السيرفرات ولمتصفح Safari. تُستخدم أيضاً في روابط التصدير.',
   'pb.autoNext':'تشغيل الحلقة التالية تلقائياً','pb.autoNextHint':'عند انتهاء الحلقة تبدأ الحلقة التالية تلقائياً.','pb.enabled':'مفعّل',
+  'pb.proxy':'الاتصال عبر وسيط الموقع','pb.proxyHint':'يُستخدم فقط عندما يكون الموقع مفتوحاً برابط https (مثل Vercel) وسيرفر IPTV يستخدم http، وهو ما تمنعه المتصفحات. تمر الطلبات حينها عبر موقعك أنت، فيرى المزوّد عنوان سيرفر الموقع بدلاً من عنوانك.',
+  'pb.proxyAuto':'تلقائي','pb.proxyOff':'إيقاف',
+  'px.st.on':'الوسيط موجود على هذا الموقع (api/proxy)','px.st.none':'لا يوجد وسيط على هذا الموقع','px.st.off':'متوقف','px.st.local':'غير مطلوب — البرنامج مفتوح من ملف على هذا الجهاز','px.st.checking':'جاري الفحص…',
+  'route.on':'الموقع يستخدم https والسيرفر يستخدم http، لذلك يتم الاتصال عبر وسيط الموقع.',
+  'route.none':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال.\nالحل: أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم رابط https من مزوّد الخدمة إن وُجد، أو افتح البرنامج من ملف HTML على جهازك.',
+  'route.off':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال طالما الوسيط متوقف (الإعدادات ← التشغيل).',
+  'err.mixed':'المتصفح منع الاتصال: الموقع مفتوح برابط آمن (https) بينما سيرفر IPTV يستخدم http، والمتصفحات لا تسمح لصفحة آمنة بجلب بيانات من سيرفر غير آمن.\nالحل: أضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم رابط https من مزوّد الخدمة إن وُجد، أو افتح البرنامج من ملف HTML على جهازك.',
+  'err.mixedOff':'المتصفح منع الاتصال: الموقع يستخدم https والسيرفر يستخدم http. فعّل «الاتصال عبر وسيط الموقع» من الإعدادات ← التشغيل.',
+  'err.proxy':'وسيط الموقع لم يستطع إتمام الطلب: {m}',
+  'px.unreachable':'لم يستطع الوصول لسيرفر IPTV. بعض المزوّدين يمنعون الاتصالات القادمة من السيرفرات السحابية مثل Vercel.',
+  'px.timeout':'سيرفر IPTV لم يرد في الوقت المحدد.',
+  'pm.mixed':'المتصفح يمنع هذا البث: الموقع يستخدم https والبث يستخدم http.\nأضف ملف الوسيط api/proxy.js إلى الموقع، أو استخدم «تشغيل في VLC».',
+  'p.popMixed':'المتصفح يمنع هذا البث على موقع https. أضف api/proxy.js إلى الموقع، أو استخدم «تشغيل في VLC».',
+  'dl.mixed':'تم تحويل التحميل إلى المتصفح. لأن الموقع يستخدم https والسيرفر يستخدم http، قد يقول المتصفح إن الملف لا يمكن تحميله بأمان — اختر «الاحتفاظ» (Keep) للمتابعة.',
   'about.desc':'مشغّل IPTV على الويب ومولّد قوائم M3U/M3U8 لسيرفرات Xtream Codes. يعمل بالكامل داخل متصفحك — لا يتم إرسال بياناتك لأي جهة غير سيرفر الاشتراك الخاص بك.',
   'about.version':'الإصدار','about.released':'تاريخ ووقت الإصدار','about.dev':'المطوّر',
   'about.libs':'التشغيل يعتمد على مكتبتي hls.js و mpegts.js مفتوحتي المصدر، ويتم تحميلهما من الإنترنت أول مرة يتم فيها تشغيل بث مباشر.',
@@ -918,7 +954,7 @@ const DEFAULTS = {
   lang: 'en', theme: 'system', fmt: 'ts', autoNext: true, remember: true,
   incLive: true, incMovie: true, incSeries: true,
   mode: 'links', fileName: 'playlist', plus: true, thumbs: true, epg: true, info: true, prefix: true,
-  expLive: true, expMovie: true, expSeries: true, seriesGroup: 'name'
+  expLive: true, expMovie: true, expSeries: true, seriesGroup: 'name', proxy: 'auto'
 };
 let S = { ...DEFAULTS };
 try { Object.assign(S, JSON.parse(localStorage.getItem(SET_KEY) || '{}')); } catch {}
@@ -964,7 +1000,7 @@ class FriendlyError extends Error {}
 
 function toast(text){
   const el = $('#toast'); el.textContent = text; el.classList.add('show');
-  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), 2600);
+  clearTimeout(toast._t); toast._t = setTimeout(() => el.classList.remove('show'), Math.min(9000, Math.max(2600, text.length * 55)));
 }
 function showMsg(el, type, text){ el.className = 'msg show ' + type; el.textContent = text; }
 function hideMsg(el){ el.className = 'msg'; el.textContent = ''; }
@@ -981,6 +1017,49 @@ function getPhpUrl(acc){
 }
 const xmltvUrl = acc => `${acc.server}/xmltv.php?username=${enc(acc.username)}&password=${enc(acc.password)}`;
 const apiBase = acc => `${acc.server}/player_api.php?username=${enc(acc.username)}&password=${enc(acc.password)}`;
+
+/* ---- https sites and http servers ----
+   Hosts such as Vercel serve the app over https; browsers then block every request to an http:// IPTV server
+   ("mixed content"). When the site also has the proxy function (api/proxy.js), those requests go through it. */
+const SECURE_PAGE = location.protocol === 'https:';
+const ON_WEB = /^https?:$/.test(location.protocol);
+const PROXY = { state: 'unknown', ok: false, promise: null };   // unknown | checking | on | none
+const isHttp = u => /^http:\/\//i.test(String(u || ''));
+const mixedBlocked = u => SECURE_PAGE && isHttp(u);
+const proxyAllowed = () => ON_WEB && S.proxy !== 'off';
+const proxied = u => location.origin + '/api/proxy?u=' + enc(u);
+const useProxy = u => mixedBlocked(u) && proxyAllowed() && PROXY.ok;
+const mediaUrl = u => useProxy(u) ? proxied(u) : u;
+function detectProxy(){
+  if (!ON_WEB) return Promise.resolve(false);
+  if (PROXY.promise) return PROXY.promise;
+  PROXY.state = 'checking';
+  PROXY.promise = (async () => {
+    try {
+      const r = await fetch('/api/proxy?ping=1', { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+      const j = r.ok ? await r.json() : null;
+      PROXY.ok = !!(j && j.iskander === 'proxy');
+    } catch { PROXY.ok = false; }
+    PROXY.state = PROXY.ok ? 'on' : 'none';
+    return PROXY.ok;
+  })();
+  return PROXY.promise;
+}
+function renderProxyStatus(){
+  const st = !ON_WEB ? 'local' : S.proxy === 'off' ? 'off' : PROXY.state === 'on' ? 'on' : PROXY.state === 'none' ? 'none' : 'checking';
+  const el = $('#proxyStatus');
+  el.textContent = t('px.st.' + st);
+  el.className = 'badge ' + ({ on: 'ok', none: 'warn' }[st] || 'muted');
+  renderRouteNote();
+}
+function renderRouteNote(){
+  const el = $('#routeNote');
+  if (!mixedBlocked(formAccount().server)){ hideMsg(el); return; }
+  if (!proxyAllowed()) showMsg(el, 'warn', t('route.off'));
+  else if (PROXY.state === 'on') showMsg(el, 'ok', t('route.on'));
+  else if (PROXY.state === 'none') showMsg(el, 'warn', t('route.none'));
+  else hideMsg(el);
+}
 
 /* =====================================================================
    Theme & language
@@ -1017,7 +1096,7 @@ function applyI18n(){
 }
 function rerenderAll(){
   applyI18n();
-  updateFormButtons(); updateLinkPreview(); renderAccounts(); renderChip();
+  updateFormButtons(); updateLinkPreview(); renderAccounts(); renderChip(); renderProxyStatus();
   if (state.formInfo) renderStatus(state.formInfo);
   renderLib(); refreshPreview(); renderDownloads();
   if (state.player) updatePlayerUi();
@@ -1037,6 +1116,10 @@ function onSetting(k){
   if (k === 'lang'){ rerenderAll(); return; }
   if (k === 'theme'){ applyTheme(); return; }
   if (k === 'remember'){ saveAccounts(); return; }
+  if (k === 'proxy'){
+    if (proxyAllowed()) detectProxy().then(() => { renderProxyStatus(); renderLib(); });
+    renderProxyStatus(); renderLib(); return;
+  }
   if (k === 'mode'){ updateModeUi(); }
   if (k === 'fmt' || k === 'plus') updateLinkPreview();
   refreshPreview();
@@ -1161,6 +1244,7 @@ function updateLinkPreview(){
   const a = formAccount(); const ok = formValid(a);
   $('#linkPreview').textContent = ok ? getPhpUrl(a) : t('f.linkPh');
   $('#linkPreview').classList.toggle('placeholder', !ok);
+  renderRouteNote();
 }
 
 /* smart paste parser */
@@ -1269,9 +1353,27 @@ function storeInfo(acc, info, error){
    ===================================================================== */
 async function apiGet(acc, action, timeoutMs = 60000){
   const url = apiBase(acc) + (action ? '&action=' + action : '');
+  let via = false;
+  if (mixedBlocked(url)){
+    if (!(proxyAllowed() && await detectProxy())) throw new FriendlyError(t(proxyAllowed() ? 'err.mixed' : 'err.mixedOff'));
+    via = true;
+  }
+  try { return await apiFetch(via ? proxied(url) : url, timeoutMs); }
+  catch (e){
+    // a server that refuses requests from browsers (CORS) can still be reached through the site's proxy
+    if (!via && e.net && proxyAllowed() && await detectProxy()) return apiFetch(proxied(url), timeoutMs);
+    throw e;
+  }
+}
+async function apiFetch(url, timeoutMs){
   const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
     const r = await fetch(url, { signal: ctrl.signal, cache: 'no-store' });
+    if (r.headers.get('x-iskander-proxy') === 'error'){
+      let j = {}; try { j = await r.json(); } catch {}
+      const k = 'px.' + j.code;
+      throw new FriendlyError(t('err.proxy', { m: I18N.en[k] ? t(k) : (j.error || 'HTTP ' + r.status) }));
+    }
     if (r.status === 401 || r.status === 403) throw new FriendlyError(t('err.denied'));
     if (!r.ok) throw new FriendlyError(t('err.http', { s: r.status }));
     const txt = await r.text();
@@ -1279,7 +1381,7 @@ async function apiGet(acc, action, timeoutMs = 60000){
   } catch (e){
     if (e instanceof FriendlyError) throw e;
     if (e.name === 'AbortError') throw new FriendlyError(t('err.timeout'));
-    throw new FriendlyError(t('err.net'));
+    const err = new FriendlyError(t('err.net')); err.net = true; throw err;
   } finally { clearTimeout(timer); }
 }
 async function checkAccount(){
@@ -1544,7 +1646,7 @@ function renderCats(){
     : `<div class="empty">${esc(t('cats.emptyTab', { tab: t('k.' + tab) }))}</div>`;
 }
 function thumbHtml(url, name){
-  return url ? `<img src="${esc(url)}" alt="" loading="lazy" referrerpolicy="no-referrer" data-ph="${esc(initials(name))}">`
+  return url ? `<img src="${esc(mediaUrl(url))}" alt="" loading="lazy" referrerpolicy="no-referrer" data-ph="${esc(initials(name))}">`
              : `<span class="ph">${esc(initials(name))}</span>`;
 }
 const PLAY_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>';
@@ -1767,7 +1869,7 @@ const LIBS = {
   hls: 'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js',
   mpegts: 'https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js'
 };
-const pmsg = () => ({ network: t('pm.network'), media: t('pm.media'), lib: t('pm.lib'), unsupported: t('pm.unsupported') });
+const pmsg = () => ({ network: t('pm.network'), media: t('pm.media'), lib: t('pm.lib'), unsupported: t('pm.unsupported'), mixed: t('pm.mixed') });
 
 // Self-contained (also injected into the separate player window) — must not use outer variables.
 function attachStream(video, url, kind, libs, onError){
@@ -1782,7 +1884,9 @@ function attachStream(video, url, kind, libs, onError){
     return cache[src];
   }
   function fail(code){ if (!dead) onError(code); }
-  var path = url.split(/[?#]/)[0];
+  // a link relayed by the site's proxy carries the real address in "u"
+  var inner = /\/api\/proxy\?/.test(url) ? (url.match(/[?&]u=([^&#]+)/) || [])[1] : null;
+  var path = (inner ? decodeURIComponent(inner) : url).split(/[?#]/)[0];
   var ext = ((path.match(/\.([a-z0-9]+)$/i) || [])[1] || '').toLowerCase();
   video.onerror = function(){ fail('media'); };
   (async function(){
@@ -1849,6 +1953,8 @@ function addJob(j){
 }
 async function startDownload(e){
   const name = safeFile(e.title, e.ext || extOf(e.url));
+  // a page on https can't read an http file; the browser downloads it itself (and may ask to confirm)
+  if (mixedBlocked(e.url)){ directDownload(e.url, name); toast(t('dl.mixed')); return; }
   if (typeof window.showSaveFilePicker !== 'function'){ directDownload(e.url, name); toast(t('dl.direct')); return; }
   let handle;
   try { handle = await window.showSaveFilePicker({ suggestedName: name }); }
@@ -1969,7 +2075,7 @@ function closePlayer(){
 function showPlayerError(code){
   const p = state.player; if (!p) return;
   p.err = code;
-  const a = altFormat(p.list[p.index]);
+  const a = mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
   setPState('err', pmsg()[code] || t('pm.media'),
     `<div class="row" style="justify-content:center">${a ? `<button class="btn sm" type="button" data-pact="fmt">${esc(t('p.tryFmt', { f: a.label }))}</button>` : ''}<button class="btn sm" type="button" data-pact="vlc">${esc(t('p.vlc'))}</button><button class="btn sm" type="button" data-pact="copy">${esc(t('p.copy'))}</button></div>`);
 }
@@ -1980,21 +2086,35 @@ function updatePlayerUi(){
   $('#pSub').textContent = [e.sub, p.list.length > 1 ? `${p.index + 1} / ${p.list.length}` : ''].filter(Boolean).join(' · ');
   $('#pPrev').classList.toggle('hidden', p.list.length < 2); $('#pPrev').disabled = p.index <= 0;
   $('#pNext').classList.toggle('hidden', p.list.length < 2); $('#pNext').disabled = p.index >= p.list.length - 1;
-  const alt = altFormat(e);
+  const alt = mixedBlocked(e.url) ? null : altFormat(e);   // on an https site both formats go the same way
   $('#pFmt').classList.toggle('hidden', !alt);
   if (alt) $('#pFmt').textContent = t('p.fmt', { f: alt.label });
   $('#pPip').classList.toggle('hidden', !document.pictureInPictureEnabled);
   if (p.err) showPlayerError(p.err);
 }
-function playCurrent(){
+/* the address the player really loads: through the site's proxy when the browser would block the stream */
+function playSrcNow(e){
+  if (!mixedBlocked(e.url)) return e.url;
+  if (!useProxy(e.url)) return null;
+  // through the proxy, live TV is taken as HLS: short segment requests instead of one endless stream
+  return proxied(e.kind === 'live' ? e.url.replace(/(\/live\/[^/]+\/[^/]+\/\d+)\.ts$/i, '$1.m3u8') : e.url);
+}
+async function playSrc(e){
+  if (mixedBlocked(e.url) && proxyAllowed()) await detectProxy();
+  return playSrcNow(e);
+}
+async function playCurrent(){
   const p = state.player; if (!p) return;
   stopPlayback(); p.err = null;
   const e = p.list[p.index];
-  $('#pLogo').innerHTML = e.logo ? `<img src="${esc(e.logo)}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
+  $('#pLogo').innerHTML = e.logo ? `<img src="${esc(mediaUrl(e.logo))}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
   updatePlayerUi();
   setPState('load', t('p.loading'));
   const v = $('#video');
-  p.stop = attachStream(v, e.url, e.kind, LIBS, code => { if (state.player !== p) return; clearTimeout(p.timer); showPlayerError(code); });
+  const src = await playSrc(e);
+  if (state.player !== p || p.list[p.index] !== e || p.stop) return;   // closed or moved on meanwhile
+  if (!src){ showPlayerError('mixed'); return; }
+  p.stop = attachStream(v, src, e.kind, LIBS, code => { if (state.player !== p) return; clearTimeout(p.timer); showPlayerError(code); });
   p.timer = setTimeout(() => { if (state.player === p && !p.err && v.readyState < 3) setPState('load', t('pm.timeout')); }, 20000);
 }
 function playerStep(d){
@@ -2014,8 +2134,8 @@ function vlcFile(){
   saveFile(text, (title(e.title).replace(/[\\/:*?"<>|]+/g, '_').slice(0, 80) || 'stream') + '.m3u', 'audio/x-mpegurl');
   toast(t('p.vlcDone'));
 }
-function popupHtml(e){
-  const cfg = JSON.stringify({ url: e.url, kind: e.kind, libs: LIBS, msg: pmsg(), loading: t('p.loading') }).replace(/</g, '\\u003c');
+function popupHtml(e, src){
+  const cfg = JSON.stringify({ url: src || e.url, kind: e.kind, libs: LIBS, msg: pmsg(), loading: t('p.loading') }).replace(/</g, '\\u003c');
   return '<!doctype html><html lang="' + S.lang + '" dir="' + (S.lang === 'ar' ? 'rtl' : 'ltr') + '"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(e.title) + ' — ISKANDER</title><link rel="icon" href="' + $('#favicon').href + '">' +
     '<style>html,body{margin:0;height:100%;background:#000;color:#fff;font-family:"Segoe UI",Tahoma,sans-serif;overflow:hidden}' +
     'video{width:100%;height:100%;display:block;background:#000}' +
@@ -2032,10 +2152,12 @@ function popupHtml(e){
 }
 function popout(){
   const e = curEntry(); if (!e) return;
+  const src = playSrcNow(e);
+  if (!src){ toast(t('p.popMixed')); return; }
   const w = window.open('', 'iskander_player', 'width=960,height=560');
   if (!w){ toast(t('p.popBlocked')); return; }
   try { if (w.__stop) w.__stop(); } catch {}
-  const html = popupHtml(e);
+  const html = popupHtml(e, src);
   try { w.document.open(); w.document.write(html); w.document.close(); }
   catch { w.location.href = URL.createObjectURL(new Blob([html], { type: 'text/html' })); }
   closePlayer();
@@ -2259,6 +2381,8 @@ renderAccounts();
 renderLib();
 route();
 if (state.accounts.length) checkAll(true);
+renderProxyStatus();
+if (proxyAllowed()) detectProxy().then(() => { renderProxyStatus(); if (PROXY.ok && SECURE_PAGE) renderLib(); });
 })();
 </script>
 </body>
