@@ -722,8 +722,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.5.0',
-  released: '2026-11-13T04:04:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.5.1',
+  released: '2026-11-13T04:23:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -2189,7 +2189,7 @@ function srcLabel(u){
   return isProxiedUrl(u) ? t('p.viaProxy', { f }) : f;
 }
 /* why did a stream fail? first the account (connection limit, status), then — through the proxy — the server's answer */
-async function playDiagnosis(e, src){
+async function playDiagnosis(e, src, triedDirect){
   if (e.acc){
     try {
       const info = infoFrom(await apiGet(e.acc, '', 15000));
@@ -2199,56 +2199,65 @@ async function playDiagnosis(e, src){
       if (info.max && info.active >= info.max) return { key: 'pm.limit', vars: { a: nf(info.active), m: nf(info.max) } };
     } catch {}
   }
-  return isProxiedUrl(src) ? proxyDiagnosis(src) : null;
+  // the proxy's own report only helps when the browser had no direct way to the server
+  return isProxiedUrl(src) && !triedDirect ? proxyDiagnosis(src) : null;
 }
 async function playSrc(e){
   await ensureDirect(e.url);
   if (mixedBlocked(e.url) && proxyAllowed()) await detectProxy();
   return playSrcNow(e);
 }
+/* the ways to play an entry, in order — every failure moves on to the next one:
+   straight from the server (like the local copy), the other live format, then the site's proxy */
+async function planRoutes(e){
+  await ensureDirect(e.url);
+  const routes = [];
+  if (!mixedBlocked(e.url)){
+    routes.push({ url: e.url });
+    const alt = altFormat(e);
+    if (alt) routes.push({ url: alt.url, alt: true });
+  }
+  if (ON_WEB && isHttp(e.url) && proxyAllowed() && await detectProxy()){
+    const via = { url: e.url, proxy: true };
+    // the proxy goes first only when the last channel needed it; the direct ways still follow if it fails
+    if (state.preferProxy && routes.length) routes.unshift(via); else routes.push(via);
+  }
+  return routes;
+}
 async function playCurrent(retry){
   const p = state.player; if (!p) return;
   stopPlayback(); p.err = null; p.errInfo = null; p.diag = false;
   const e = p.list[p.index];
-  if (!retry){
-    p.tries = { alt: false, proxy: false }; p.tried = [];
-    // once a stream only played through the proxy, go there first for the next ones
-    p.forceProxy = !!state.preferProxy && ON_WEB && isHttp(e.url) && proxyAllowed();
-  }
+  const token = p.token = (p.token || 0) + 1;
   $('#pLogo').innerHTML = e.logo ? `<img src="${esc(mediaUrl(e.logo))}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
   updatePlayerUi();
   setPState('load', t(retry ? 'p.retry' : 'p.loading'));
   const v = $('#video');
-  const src = p.forceProxy && (PROXY.ok || await detectProxy()) ? proxiedPlay(e) : await playSrc(e);
-  if (state.player !== p || p.list[p.index] !== e || p.stop) return;   // closed or moved on meanwhile
-  if (!src){ showPlayerError('mixed'); return; }
-  p.tried.push(srcLabel(src));
+  if (!retry){
+    p.tried = []; p.step = 0; p.direct = false; p.current = null;
+    p.routes = await planRoutes(e);
+    if (state.player !== p || p.token !== token) return;   // closed or moved on meanwhile
+  }
+  const r = p.routes[p.step];
+  if (!r){ showPlayerError('mixed'); return; }   // blocked by the browser and no proxy on the site
+  if (r.alt) e.url = r.url;
+  const src = r.proxy ? proxiedPlay({ kind: e.kind, url: r.url }) : r.url;
+  if (!r.proxy) p.direct = true;
+  p.current = r; p.tried.push(srcLabel(src));
+  updatePlayerUi();
   p.stop = attachStream(v, src, e.kind, LIBS, code => {
-    if (state.player !== p || p.list[p.index] !== e || p.err || p.retrying) return;
+    if (state.player !== p || p.token !== token || p.err) return;
     clearTimeout(p.timer);
-    const direct = !isProxiedUrl(src);
-    // 1) live TV: a server may refuse one format and still serve the other
-    const alt = direct && code === 'network' && !p.tries.alt && altFormat(e);
-    if (alt){ p.tries.alt = true; e.url = alt.url; playCurrent(true); return; }
-    // 2) on a website, a stream the browser could not load directly may still come through the site's proxy
-    if (direct && (code === 'network' || code === 'media') && !p.tries.proxy && ON_WEB && isHttp(e.url) && proxyAllowed()){
-      p.tries.proxy = true; p.retrying = true; setPState('load', t('p.retry'));
-      detectProxy().then(ok => {
-        p.retrying = false;
-        if (state.player !== p || p.list[p.index] !== e) return;
-        if (ok){ p.forceProxy = true; playCurrent(true); } else failNow();
-      });
-      return;
-    }
-    failNow();
-    function failNow(){
-      showPlayerError(code);
-      if (p.diag) return;
-      p.diag = true;
-      playDiagnosis(e, src).then(d => { if (d && state.player === p && p.list[p.index] === e && p.err){ p.errInfo = d; showPlayerError(p.err); } });
-    }
+    // move on to the next way of playing it (switching format can't fix a codec problem)
+    let next = p.step + 1;
+    if (code === 'media') while (p.routes[next] && p.routes[next].alt) next++;
+    if ((code === 'network' || code === 'media') && p.routes[next]){ p.step = next; playCurrent(true); return; }
+    showPlayerError(code);
+    if (p.diag) return;
+    p.diag = true;
+    playDiagnosis(e, src, p.direct).then(d => { if (d && state.player === p && p.token === token && p.err){ p.errInfo = d; showPlayerError(p.err); } });
   });
-  p.timer = setTimeout(() => { if (state.player === p && !p.err && v.readyState < 3) setPState('load', t('pm.timeout')); }, 20000);
+  p.timer = setTimeout(() => { if (state.player === p && p.token === token && !p.err && v.readyState < 3) setPState('load', t('pm.timeout')); }, 20000);
 }
 function playerStep(d){
   const p = state.player; if (!p) return;
@@ -2285,7 +2294,8 @@ function popupHtml(e, src){
 }
 function popout(){
   const e = curEntry(); if (!e) return;
-  const src = playSrcNow(e);
+  const pc = state.player && state.player.current;   // the way that is playing now
+  const src = pc ? (pc.proxy ? proxiedPlay({ kind: e.kind, url: pc.url }) : pc.url) : playSrcNow(e);
   if (!src){ toast(t('p.popMixed')); return; }
   const w = window.open('', 'iskander_player', 'width=960,height=560');
   if (!w){ toast(t('p.popBlocked')); return; }
@@ -2298,9 +2308,10 @@ function popout(){
 }
 const videoEl = $('#video');
 videoEl.addEventListener('playing', () => {
-  if (!state.player) return;
-  clearTimeout(state.player.timer); setPState(null);
-  if (state.player.forceProxy) state.preferProxy = true;
+  const p = state.player; if (!p) return;
+  clearTimeout(p.timer); setPState(null);
+  // remember whether the proxy was needed, so the next channel starts the right way
+  if (p.current){ if (!p.current.proxy) state.preferProxy = false; else if (p.step > 0) state.preferProxy = true; }
 });
 videoEl.addEventListener('waiting', () => { if (state.player && !state.player.err) setPState('load', t('p.loading')); });
 videoEl.addEventListener('ended', () => { const p = state.player; if (S.autoNext && p && p.list[p.index].kind === 'episode' && p.index < p.list.length - 1) playerStep(1); });
