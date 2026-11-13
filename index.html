@@ -334,6 +334,16 @@ pre.preview{direction:ltr;text-align:left;background:var(--code-bg);color:var(--
 @media (max-width:560px){.pbox{padding:10px}.modal.player{padding:12px 8px}}
 
 /* ===== Footer / toast ===== */
+/* ===== Separate player window (?popout=1) ===== */
+html.popout,html.popout body{height:100%;overflow:hidden;background:#000}
+html.popout body > :not(#popout):not(.sprite){display:none !important}
+#popout{position:fixed;inset:0;background:#000;color:#fff}
+#popout video{width:100%;height:100%;display:block;background:#000}
+#popout .pm{position:absolute;inset:0;display:flex;flex-direction:column;gap:14px;align-items:center;justify-content:center;text-align:center;padding:24px;white-space:pre-line;pointer-events:none;font-size:15px;line-height:1.6}
+#popout .pm .lgmark{width:min(110px,28vw);animation:lgpulse 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){#popout .pm .lgmark{animation:none}}
+#popout .pnote{position:absolute;left:12px;right:12px;bottom:64px;background:rgba(5,7,13,.86);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:10px 14px;font-size:14px;line-height:1.6;white-space:pre-line;display:none}
+#popout .pnote.show{display:block}
 .foot{border-top:1px solid var(--border)}
 .footbrand{display:inline-flex;align-items:center;gap:10px}
 .footbrand .lgmark{width:40px;margin-block:-4px}
@@ -648,6 +658,9 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
             <label><input type="radio" name="proxy" value="off" data-set="proxy"> <span data-i18n="pb.proxyOff"></span></label>
           </div>
         </div>
+        <div class="setrow">
+          <div style="min-width:0"><b data-i18n="pb.caps"></b><p class="hint" data-i18n="pb.capsHint"></p><div class="row" id="capsList" style="gap:6px;margin-top:8px"></div></div>
+        </div>
       </section>
 
       <!-- About -->
@@ -697,6 +710,7 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
       <button class="btn sm" id="pVlc" type="button" data-i18n="p.vlc"></button>
       <button class="btn sm" id="pCopy" type="button" data-i18n="p.copy"></button>
     </div>
+    <div class="msg" id="pNote" role="status"></div>
     <p class="hint" data-i18n="p.hint"></p>
   </div>
 </div>
@@ -722,8 +736,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.5.1',
-  released: '2026-11-13T04:23:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.6.0',
+  released: '2026-11-13T10:23:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -833,6 +847,13 @@ en: {
   'pm.pxNotMedia':'The IPTV server sent back a page instead of the video when the site’s proxy asked for it (HTTP {s}) — usually a refusal or a connection-limit message.\nMost reliable fix: allow “Insecure content” for this site (see Settings → Playback), then reload.',
   'pm.pxMedia':'This video didn’t play through the site’s proxy.\nIf it plays in the local copy, allow “Insecure content” for this site (see Settings → Playback) and reload, so the browser loads it straight from your server.',
   'p.retry':'Trying another way to reach the stream…','p.viaProxy':'{f} via the site proxy','pm.tried':'Tried: {list}',
+  'pm.codec':'This video uses {list}, which this browser can’t play.\nTry opening the site in Microsoft Edge on Windows, which may support it, or use “Play in VLC”. Settings → Playback lists what this browser supports.',
+  'pm.codecGeneric':'This video uses a format this browser can’t play (for example HEVC video or Dolby audio).\nTry Microsoft Edge on Windows, or use “Play in VLC”.',
+  'p.popGone':'Nothing to play here — start a video in the main ISKANDER window, then choose “Open in separate window”.',
+  'pb.caps':'What this browser can play','pb.capsHint':'Checked in this browser on this device. Channels and films often use Dolby audio (AC-3 / E-AC-3) or HEVC video; if those show ✗, try the site in Microsoft Edge on Windows, which may play them, or use “Play in VLC”.',
+  'codec.and':' and ',
+  'pm.noSound':'No sound: this video’s audio is {list}, which this browser can’t play.\nFor sound, use “Play in VLC”, or open the site in Microsoft Edge on Windows.',
+  'pm.noPicture':'No picture: this video uses {list}, which this browser can’t show.\nUse “Play in VLC”, or open the site in Microsoft Edge on Windows.',
   'pm.limit':'Your account is already using all of its connections ({a} of {m}).\nStop playback on other devices or apps, wait a minute, then try again.',
   'pm.accStatus':'The server reports this account as “{s}”, so it refuses streams.',
   'route.off':'This site uses https but this server uses http, so the browser will block the connection while the proxy is turned off (Settings → Playback).',
@@ -951,6 +972,13 @@ ar: {
   'pm.pxNotMedia':'سيرفر IPTV أرسل صفحة بدلاً من الفيديو عندما طلبه وسيط الموقع (HTTP {s}) — غالباً رسالة رفض أو تجاوز لعدد الاتصالات.\nالحل الأضمن: اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل)، ثم أعد تحميل الصفحة.',
   'pm.pxMedia':'لم يعمل هذا الفيديو عبر وسيط الموقع.\nلو كان يعمل في النسخة المحلية، اسمح بـ«المحتوى غير الآمن» لهذا الموقع (التفاصيل في الإعدادات ← التشغيل) وأعد تحميل الصفحة، ليحمّله المتصفح من السيرفر مباشرة.',
   'p.retry':'جاري تجربة طريقة أخرى للوصول للبث…','p.viaProxy':'{f} عبر وسيط الموقع','pm.tried':'تمت تجربة: {list}',
+  'pm.codec':'هذا الفيديو يستخدم {list}، وهذا المتصفح لا يستطيع تشغيله.\nجرّب فتح الموقع في متصفح Microsoft Edge على Windows فقد يدعمه، أو استخدم «تشغيل في VLC». قائمة ما يدعمه متصفحك في الإعدادات ← التشغيل.',
+  'pm.codecGeneric':'هذا الفيديو بصيغة لا يستطيع المتصفح تشغيلها (مثل فيديو HEVC أو صوت Dolby).\nجرّب متصفح Microsoft Edge على Windows، أو استخدم «تشغيل في VLC».',
+  'p.popGone':'لا يوجد ما يُعرض هنا — شغّل الفيديو من نافذة ISKANDER الرئيسية ثم اختر «فتح في نافذة مستقلة».',
+  'pb.caps':'ما يستطيع هذا المتصفح تشغيله','pb.capsHint':'تم الفحص في هذا المتصفح على هذا الجهاز. كثير من القنوات والأفلام تستخدم صوت Dolby (AC-3 / E-AC-3) أو فيديو HEVC؛ لو ظهرت بعلامة ✗ جرّب الموقع في متصفح Microsoft Edge على Windows فقد يشغّلها، أو استخدم «تشغيل في VLC».',
+  'codec.and':' و',
+  'pm.noSound':'بدون صوت: صوت هذا الفيديو بصيغة {list}، وهذا المتصفح لا يستطيع تشغيلها.\nللصوت استخدم «تشغيل في VLC»، أو افتح الموقع في متصفح Microsoft Edge على Windows.',
+  'pm.noPicture':'بدون صورة: هذا الفيديو يستخدم {list}، وهذا المتصفح لا يستطيع عرضه.\nاستخدم «تشغيل في VLC»، أو افتح الموقع في متصفح Microsoft Edge على Windows.',
   'pm.limit':'حسابك يستخدم كل الاتصالات المسموحة له ({a} من {m}).\nأوقف التشغيل على الأجهزة أو التطبيقات الأخرى، وانتظر دقيقة، ثم حاول مرة أخرى.',
   'pm.accStatus':'السيرفر يعرض حالة هذا الحساب «{s}»، لذلك يرفض البث.',
   'route.off':'الموقع يستخدم https بينما السيرفر يستخدم http، لذلك سيمنع المتصفح الاتصال طالما الوسيط متوقف (الإعدادات ← التشغيل).',
@@ -1044,6 +1072,7 @@ const apiBase = acc => `${acc.server}/player_api.php?username=${enc(acc.username
    Hosts such as Vercel serve the app over https; browsers then block every request to an http:// IPTV server
    ("mixed content"). When the site also has the proxy function (api/proxy.js), those requests go through it. */
 const SECURE_PAGE = location.protocol === 'https:';
+const POPOUT = /^https?:$/.test(location.protocol) && new URLSearchParams(location.search).get('popout') === '1';
 const ON_WEB = /^https?:$/.test(location.protocol);
 const PROXY = { state: 'unknown', ok: false, promise: null };   // unknown | checking | on | none
 const isHttp = u => /^http:\/\//i.test(String(u || ''));
@@ -1139,7 +1168,7 @@ function applyI18n(){
 }
 function rerenderAll(){
   applyI18n();
-  updateFormButtons(); updateLinkPreview(); renderAccounts(); renderChip(); renderProxyStatus();
+  updateFormButtons(); updateLinkPreview(); renderAccounts(); renderChip(); renderProxyStatus(); renderCaps();
   if (state.formInfo) renderStatus(state.formInfo);
   renderLib(); refreshPreview(); renderDownloads();
   if (state.player) updatePlayerUi();
@@ -1923,11 +1952,156 @@ const LIBS = {
   hls: 'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js',
   mpegts: 'https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js'
 };
-const pmsg = () => ({ network: t('pm.network'), media: t('pm.media'), lib: t('pm.lib'), unsupported: t('pm.unsupported'), mixed: t('pm.mixed') });
+const pmsg = () => ({ network: t('pm.network'), media: t('pm.media'), lib: t('pm.lib'), unsupported: t('pm.unsupported'), mixed: t('pm.mixed'), codec: t('pm.codecGeneric') });
+
+/* ---------- Codecs: what this browser can decode, and which one a failing video uses ---------- */
+const CODECS = {
+  h264:   ['H.264', 'video/mp4; codecs="avc1.64001F"'],
+  hevc:   ['HEVC (H.265)', 'video/mp4; codecs="hvc1.1.6.L93.B0"', 'video/mp4; codecs="hev1.1.6.L93.B0"'],
+  av1:    ['AV1', 'video/mp4; codecs="av01.0.05M.08"'],
+  mpeg4:  ['MPEG-4 Part 2 (XviD / DivX)', 'video/mp4; codecs="mp4v.20.9"'],
+  mpeg2:  ['MPEG-2', 'video/mpeg', 'video/mp2t; codecs="mp2v"'],
+  avi:    ['AVI', 'video/x-msvideo', 'video/avi'],
+  aac:    ['AAC', 'audio/mp4; codecs="mp4a.40.2"'],
+  mp3:    ['MP3', 'audio/mpeg'],
+  ac3:    ['Dolby Digital (AC-3)', 'audio/mp4; codecs="ac-3"'],
+  eac3:   ['Dolby Digital Plus (E-AC-3)', 'audio/mp4; codecs="ec-3"'],
+  dts:    ['DTS', 'audio/mp4; codecs="dtsc"'],
+  truehd: ['Dolby TrueHD', 'audio/mp4; codecs="mlpa"']
+};
+const capCache = {};
+function canDecode(key){
+  if (key in capCache) return capCache[key];
+  const v = document.createElement('video');
+  return capCache[key] = CODECS[key].slice(1).some(type => {
+    try { return (window.MediaSource && MediaSource.isTypeSupported(type)) || !!v.canPlayType(type); } catch { return false; }
+  });
+}
+// codec strings reported by the players → the names above
+function codecKeys(info){
+  const keys = [];
+  if (info && info.video && /^(hvc1|hev1)/i.test(info.video)) keys.push('hevc');
+  const a = info && info.audio ? String(info.audio).toLowerCase() : '';
+  if (a === 'ac-3') keys.push('ac3'); else if (a === 'ec-3') keys.push('eac3'); else if (/^dts/.test(a)) keys.push('dts'); else if (a === 'mlpa') keys.push('truehd');
+  return keys;
+}
+const codecNames = keys => keys.map(k => CODECS[k][0]).join(t('codec.and'));
+function codecText(info){
+  const keys = codecKeys(info).filter(k => !canDecode(k));
+  return keys.length ? t('pm.codec', { list: codecNames(keys) }) : t('pm.codecGeneric');
+}
+function renderCaps(){
+  const box = $('#capsList'); if (!box) return;
+  box.innerHTML = Object.keys(CODECS).map(k => `<span class="badge ${canDecode(k) ? 'ok' : 'err'}">${canDecode(k) ? '✓' : '✗'} ${esc(CODECS[k][0])}</span>`).join('');
+}
+/* a film the browser refused: read the start of the file (and its end, where an MP4 may keep its index) to name its codecs */
+const CODEC_MARKS = [['avi', /^RIFF[\s\S]{4}AVI /], ['hevc', /V_MPEGH\/ISO\/HEVC|hvc1|hev1/], ['mpeg4', /XVID|DIVX|DX50|V_MPEG4\/ISO\/A?SP|mp4v/], ['mpeg2', /V_MPEG2|mp2v/],
+  ['ac3', /A_AC3|ac-3/], ['eac3', /A_EAC3|ec-3/], ['dts', /A_DTS|dts[cehl]/], ['truehd', /A_TRUEHD|mlpa/]];
+const AUDIO_KEYS = ['aac', 'mp3', 'ac3', 'eac3', 'dts', 'truehd'];
+async function readBytes(url, range, max = 1048576){
+  const r = await fetch(url, { headers: { Range: range }, cache: 'no-store', signal: AbortSignal.timeout(20000) });
+  if (!r.ok || r.headers.get('x-iskander-proxy') || !r.body) return null;
+  // a server that ignores the byte range would send the file from its start: useless for a read further in
+  if (r.status !== 206 && !/^bytes=0-/.test(range)){ r.body.cancel().catch(() => {}); return null; }
+  const total = Number((r.headers.get('content-range') || '').split('/')[1]) || 0;
+  const rd = r.body.getReader(); const parts = []; let n = 0;
+  while (n < max){ const { done, value } = await rd.read(); if (done) break; parts.push(value); n += value.byteLength; }
+  rd.cancel().catch(() => {});
+  const all = new Uint8Array(n); let o = 0; for (const x of parts){ all.set(x, o); o += x.byteLength; }
+  const bytes = all.subarray(0, Math.min(n, max));
+  return { bytes, text: new TextDecoder('latin1').decode(bytes), total };
+}
+/* MP4: the codecs are named in each track's description inside the "moov" box, which may sit at the start or the end
+   of the file and, in a long film, run to several megabytes — so walk the boxes to each track instead of guessing */
+async function boxAt(url, pos, buf){
+  const b = buf && pos + 16 <= buf.length ? buf.subarray(pos, pos + 16) : (await readBytes(url, `bytes=${pos}-${pos + 15}`, 16) || {}).bytes;
+  if (!b || b.length < 8) return null;
+  const dv = new DataView(b.buffer, b.byteOffset, b.byteLength);
+  let size = dv.getUint32(0), hlen = 8;
+  if (size === 1 && b.length >= 16){ size = Number(dv.getBigUint64(8)); hlen = 16; }
+  return { size, hlen, type: String.fromCharCode(b[4], b[5], b[6], b[7]) };
+}
+async function mp4TrackText(url, head){
+  let pos = 0, moov = null;
+  for (let i = 0; i < 16 && !moov; i++){
+    const box = await boxAt(url, pos, head.bytes);
+    if (!box || box.size < 8) return '';
+    if (box.type === 'moov') moov = box; else pos += box.size;
+  }
+  if (!moov) return '';
+  const end = pos + moov.size, out = [];
+  for (let at = pos + moov.hlen, i = 0; at + 8 <= end && i < 32; i++){
+    const box = await boxAt(url, at, head.bytes);
+    if (!box || box.size < 8) break;
+    if (box.type === 'trak'){
+      // a track's description comes before its large sample tables, so its first 64 KB are enough
+      out.push(at + 65536 <= head.bytes.length ? head.text.slice(at, at + 65536) : ((await readBytes(url, `bytes=${at}-${at + 65535}`, 65536)) || {}).text || '');
+    }
+    at += box.size;
+  }
+  return out.join('');
+}
+async function vodCodecProbe(src){
+  const urls = [src];
+  // the browser may not be allowed to read a direct link (CORS); the site's proxy can
+  if (!isProxiedUrl(src) && ON_WEB && proxyAllowed() && PROXY.ok) urls.push(proxied(src));
+  const found = text => CODEC_MARKS.filter(([, re]) => re.test(text)).map(([k]) => k);
+  for (const u of urls){
+    try {
+      const head = await readBytes(u, 'bytes=0-1048575'); if (!head) continue;
+      const tracks = head.text.slice(4, 8) === 'ftyp' ? await mp4TrackText(u, head) : '';
+      return found(tracks || head.text).filter(k => !canDecode(k));
+    } catch {}
+  }
+  return null;
+}
+
+/* a video can play with one track missing when the browser lacks its codec: say so instead of leaving it silent or black */
+async function trackNotice(v, seen, src){
+  const noSound = ('webkitAudioDecodedByteCount' in v && v.webkitAudioDecodedByteCount === 0) || v.mozHasAudio === false;
+  const noPicture = v.videoWidth === 0 || ('webkitVideoDecodedByteCount' in v && v.webkitVideoDecodedByteCount === 0);
+  if (!noSound && !noPicture) return '';
+  let keys = codecKeys({ video: seen && seen.video, audio: seen && seen.audio }).filter(k => !canDecode(k));
+  if (!keys.length && !(seen && (seen.audio || seen.video))) keys = (await vodCodecProbe(src).catch(() => null)) || [];
+  const audio = keys.filter(k => AUDIO_KEYS.includes(k)), video = keys.filter(k => !AUDIO_KEYS.includes(k));
+  if (noPicture && video.length) return t('pm.noPicture', { list: codecNames(video) });
+  if (noSound && audio.length) return t('pm.noSound', { list: codecNames(audio) });
+  return '';
+}
+
+/* "?popout=1": this page is the separate player window, opened by the main window of the same site */
+function startPopout(){
+  const root = document.documentElement;
+  root.classList.add('popout'); root.lang = S.lang; root.dir = S.lang === 'ar' ? 'rtl' : 'ltr';
+  let cfg = null;
+  try { const host = window.opener || (window.parent !== window ? window.parent : null); cfg = host && host.__iskanderPopout; } catch {}
+  const box = document.createElement('div'); box.id = 'popout';
+  box.innerHTML = '<video controls playsinline></video><div class="pm">' + LOGO_MARK + '<div class="pmt"></div></div><div class="pnote" role="status"></div>';
+  document.body.appendChild(box);
+  const v = box.querySelector('video'), m = box.querySelector('.pm'), mt = box.querySelector('.pmt'), lg = m.querySelector('.lgmark');
+  const say = (text, busy) => { mt.textContent = text; lg.style.display = busy ? '' : 'none'; m.style.display = ''; };
+  if (!cfg || !cfg.url){ document.title = 'ISKANDER'; say(t('p.popGone')); return; }
+  cfg = { url: String(cfg.url), kind: String(cfg.kind || ''), title: String(cfg.title || '') };   // own copy: the main window may change or close
+  document.title = cfg.title + ' — ISKANDER';
+  say(t('p.loading'), true);
+  const note = box.querySelector('.pnote'); let checked = false;
+  v.addEventListener('playing', () => {
+    m.style.display = 'none';
+    if (checked) return; checked = true;
+    setTimeout(() => trackNotice(v, stop.seen, cfg.url).then(text => {
+      if (!text) return;
+      note.textContent = text; note.classList.add('show');
+      setTimeout(() => note.classList.remove('show'), 15000);
+    }), 4000);
+  });
+  v.addEventListener('waiting', () => say(t('p.loading'), true));
+  const stop = attachStream(v, cfg.url, cfg.kind, LIBS, (code, info) => say(code === 'codec' ? codecText(info) : (pmsg()[code] || t('pm.media'))));
+  window.addEventListener('pagehide', stop);
+}
 
 // Self-contained (also injected into the separate player window) — must not use outer variables.
 function attachStream(video, url, kind, libs, onError){
-  var hls = null, mp = null, dead = false;
+  var hls = null, mp = null, dead = false, seen = {};
   var cache = window.__libs || (window.__libs = {});
   function load(src){
     if (!cache[src]) cache[src] = new Promise(function(ok, bad){
@@ -1937,7 +2111,15 @@ function attachStream(video, url, kind, libs, onError){
     });
     return cache[src];
   }
-  function fail(code){ if (!dead) onError(code); }
+  function fail(code, info){ if (!dead) onError(code, info); }
+  // HEVC video and Dolby / DTS audio are the codecs browsers most often lack
+  function codecBad(vc, ac){
+    var bad = null;
+    function ok(type){ try { return (window.MediaSource && MediaSource.isTypeSupported(type)) || !!video.canPlayType(type); } catch (e){ return true; } }
+    if (vc && /^(hvc1|hev1)/i.test(vc) && !ok('video/mp4; codecs="' + vc + '"')) (bad = bad || {}).video = vc;
+    if (ac && /^(ac-3|ec-3|dts[cehl]?|mlpa)$/i.test(ac) && !ok('audio/mp4; codecs="' + ac + '"')) (bad = bad || {}).audio = ac;
+    return bad;
+  }
   // a link relayed by the site's proxy carries the real address in "u"
   var inner = /\/api\/proxy\?/.test(url) ? (url.match(/[?&]u=([^&#]+)/) || [])[1] : null;
   var path = (inner ? decodeURIComponent(inner) : url).split(/[?#]/)[0];
@@ -1946,23 +2128,42 @@ function attachStream(video, url, kind, libs, onError){
   (async function(){
     try {
       if (ext === 'm3u8'){
-        if (video.canPlayType('application/vnd.apple.mpegurl')) video.src = url;
-        else {
-          await load(libs.hls); if (dead) return;
-          if (!window.Hls || !window.Hls.isSupported()) { video.src = url; }
-          else {
-            hls = new window.Hls({ enableWorker: true });
-            hls.on(window.Hls.Events.ERROR, function(e, d){ if (d && d.fatal) fail(d.type === 'networkError' ? 'network' : 'media'); });
-            hls.loadSource(url); hls.attachMedia(video);
-          }
+        // hls.js wherever Media Source exists: it behaves the same in every browser and reports codec problems;
+        // the browser's own HLS player only where there is no Media Source (older iPhones)
+        var native = video.canPlayType('application/vnd.apple.mpegurl'), lib = null;
+        if (window.MediaSource || window.ManagedMediaSource){
+          try { await load(libs.hls); lib = window.Hls; } catch (e){ if (!native) throw e; }
         }
+        if (dead) return;
+        if (lib && lib.isSupported()){
+          hls = new lib({ enableWorker: true });
+          hls.on(lib.Events.BUFFER_CODECS, function(e, d){ if (d && d.video) seen.video = d.video.codec; if (d && d.audio) seen.audio = d.audio.codec; });
+          hls.on(lib.Events.ERROR, function(e, d){
+            if (!d || !d.fatal) return;
+            var bad = codecBad(seen.video, seen.audio) || (d.details === 'manifestIncompatibleCodecsError' ? {} : null);
+            fail(bad ? 'codec' : d.type === 'networkError' ? 'network' : 'media', bad);
+          });
+          hls.loadSource(url); hls.attachMedia(video);
+        } else video.src = url;
       } else if (ext === 'ts' || (kind === 'live' && !ext)){
         await load(libs.mpegts); if (dead) return;
         var M = window.mpegts;
         if (!M || !M.isSupported()) return fail('unsupported');
         mp = M.createPlayer({ type: 'mpegts', isLive: kind === 'live', url: url },
           { enableWorker: true, lazyLoad: false, liveBufferLatencyChasing: kind === 'live' });
-        mp.on(M.Events.ERROR, function(type){ fail(type === M.ErrorTypes.NETWORK_ERROR ? 'network' : 'media'); });
+        mp.on(M.Events.MEDIA_INFO, function(mi){ if (mi){ seen.video = mi.videoCodec; seen.audio = mi.audioCodec; } });
+        mp.on(M.Events.ERROR, function(type){
+          if (type === M.ErrorTypes.NETWORK_ERROR) return fail('network');
+          // a track the browser can't decode (e.g. Dolby audio) fails here while the other may still play: wait and see
+          setTimeout(function(){
+            if (dead) return;
+            var mi = null; try { mi = mp.mediaInfo; } catch (e){}
+            if (mi){ seen.video = seen.video || mi.videoCodec; seen.audio = seen.audio || mi.audioCodec; }
+            if (video.readyState >= 2 && !video.error) return;   // still playing: the notice names the missing track
+            var bad = codecBad(seen.video, seen.audio);
+            fail(bad ? 'codec' : 'media', bad);
+          }, 2500);
+        });
         mp.attachMediaElement(video); mp.load();
       } else {
         video.src = url;
@@ -1970,7 +2171,7 @@ function attachStream(video, url, kind, libs, onError){
       var p = video.play(); if (p && p.catch) p.catch(function(){});
     } catch (e){ fail('lib'); }
   })();
-  return function stop(){
+  var stop = function(){
     dead = true; video.onerror = null;
     try { if (hls) hls.destroy(); } catch (e){}
     try { if (mp){ mp.pause(); mp.unload(); mp.detachMediaElement(); mp.destroy(); } } catch (e){}
@@ -1978,6 +2179,8 @@ function attachStream(video, url, kind, libs, onError){
     video.removeAttribute('src');
     try { video.load(); } catch (e){}
   };
+  stop.seen = seen;   // the codecs the player met, for the "no sound / no picture" notice
+  return stop;
 }
 
 /* ---------- Downloads (movies and episodes) ----------
@@ -2130,8 +2333,8 @@ function closePlayer(){
 function showPlayerError(code){
   const p = state.player; if (!p) return;
   p.err = code;
-  const a = mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
-  setPState('err', (p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : (pmsg()[code] || t('pm.media'))) +
+  const a = code === 'codec' || mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
+  setPState('err', (p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : code === 'codec' ? codecText(p.codec) : (pmsg()[code] || t('pm.media'))) +
     (p.tried && p.tried.length > 1 ? '\n' + t('pm.tried', { list: p.tried.join(' → ') }) : ''),
     `<div class="row" style="justify-content:center">${a ? `<button class="btn sm" type="button" data-pact="fmt">${esc(t('p.tryFmt', { f: a.label }))}</button>` : ''}<button class="btn sm" type="button" data-pact="vlc">${esc(t('p.vlc'))}</button><button class="btn sm" type="button" data-pact="copy">${esc(t('p.copy'))}</button></div>`);
 }
@@ -2189,7 +2392,7 @@ function srcLabel(u){
   return isProxiedUrl(u) ? t('p.viaProxy', { f }) : f;
 }
 /* why did a stream fail? first the account (connection limit, status), then — through the proxy — the server's answer */
-async function playDiagnosis(e, src, triedDirect){
+async function playDiagnosis(e, src, triedDirect, code){
   if (e.acc){
     try {
       const info = infoFrom(await apiGet(e.acc, '', 15000));
@@ -2198,6 +2401,11 @@ async function playDiagnosis(e, src, triedDirect){
       if (info.status && !/^active$/i.test(info.status)) return { key: 'pm.accStatus', vars: { s: info.status } };
       if (info.max && info.active >= info.max) return { key: 'pm.limit', vars: { a: nf(info.active), m: nf(info.max) } };
     } catch {}
+  }
+  // a file the browser refused: read its header to name the codec it uses
+  if (code === 'media'){
+    const keys = await vodCodecProbe(src).catch(() => null);
+    if (keys && keys.length) return { key: 'pm.codec', vars: { list: codecNames(keys) } };
   }
   // the proxy's own report only helps when the browser had no direct way to the server
   return isProxiedUrl(src) && !triedDirect ? proxyDiagnosis(src) : null;
@@ -2226,7 +2434,7 @@ async function planRoutes(e){
 }
 async function playCurrent(retry){
   const p = state.player; if (!p) return;
-  stopPlayback(); p.err = null; p.errInfo = null; p.diag = false;
+  stopPlayback(); p.err = null; p.errInfo = null; p.diag = false; p.codec = null;
   const e = p.list[p.index];
   const token = p.token = (p.token || 0) + 1;
   $('#pLogo').innerHTML = e.logo ? `<img src="${esc(mediaUrl(e.logo))}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
@@ -2244,20 +2452,28 @@ async function playCurrent(retry){
   const src = r.proxy ? proxiedPlay({ kind: e.kind, url: r.url }) : r.url;
   if (!r.proxy) p.direct = true;
   p.current = r; p.tried.push(srcLabel(src));
+  p.src = src; p.soundChecked = false; hideMsg($('#pNote'));
   updatePlayerUi();
-  p.stop = attachStream(v, src, e.kind, LIBS, code => {
+  p.stop = attachStream(v, src, e.kind, LIBS, (code, info) => {
     if (state.player !== p || p.token !== token || p.err) return;
     clearTimeout(p.timer);
-    // move on to the next way of playing it (switching format can't fix a codec problem)
+    // move on to the next way of playing it (another way can't fix a codec the browser lacks)
     let next = p.step + 1;
     if (code === 'media') while (p.routes[next] && p.routes[next].alt) next++;
     if ((code === 'network' || code === 'media') && p.routes[next]){ p.step = next; playCurrent(true); return; }
+    if (code === 'codec') p.codec = info || {};
     showPlayerError(code);
-    if (p.diag) return;
+    if (p.diag || code === 'codec') return;
     p.diag = true;
-    playDiagnosis(e, src, p.direct).then(d => { if (d && state.player === p && p.token === token && p.err){ p.errInfo = d; showPlayerError(p.err); } });
+    playDiagnosis(e, src, p.direct, code).then(d => { if (d && state.player === p && p.token === token && p.err){ p.errInfo = d; showPlayerError(p.err); } });
   });
-  p.timer = setTimeout(() => { if (state.player === p && p.token === token && !p.err && v.readyState < 3) setPState('load', t('pm.timeout')); }, 20000);
+  p.timer = setTimeout(() => {
+    if (state.player !== p || p.token !== token || p.err || v.readyState >= 3) return;
+    // nothing could start: if the player met a codec this browser lacks, say which
+    const seen = p.stop && p.stop.seen;
+    if (seen && codecKeys(seen).some(k => !canDecode(k))){ p.codec = { video: seen.video, audio: seen.audio }; showPlayerError('codec'); }
+    else setPState('load', t('pm.timeout'));
+  }, 20000);
 }
 function playerStep(d){
   const p = state.player; if (!p) return;
@@ -2297,6 +2513,15 @@ function popout(){
   const pc = state.player && state.player.current;   // the way that is playing now
   const src = pc ? (pc.proxy ? proxiedPlay({ kind: e.kind, url: pc.url }) : pc.url) : playSrcNow(e);
   if (!src){ toast(t('p.popMixed')); return; }
+  if (ON_WEB){
+    // a real page of this site, so the browser applies the site's permissions to it exactly as to this window
+    window.__iskanderPopout = { url: src, kind: e.kind, title: e.title };
+    const pw = window.open(location.origin + location.pathname + '?popout=1', 'iskander_player', 'width=960,height=560');
+    if (!pw){ toast(t('p.popBlocked')); return; }
+    closePlayer();
+    try { pw.focus(); } catch {}
+    return;
+  }
   const w = window.open('', 'iskander_player', 'width=960,height=560');
   if (!w){ toast(t('p.popBlocked')); return; }
   try { if (w.__stop) w.__stop(); } catch {}
@@ -2310,8 +2535,17 @@ const videoEl = $('#video');
 videoEl.addEventListener('playing', () => {
   const p = state.player; if (!p) return;
   clearTimeout(p.timer); setPState(null);
+  if (p.err){ p.err = null; p.errInfo = null; }   // it plays after all: the earlier error no longer applies
   // remember whether the proxy was needed, so the next channel starts the right way
   if (p.current){ if (!p.current.proxy) state.preferProxy = false; else if (p.step > 0) state.preferProxy = true; }
+  // a few seconds in: is there sound and picture? if a codec is missing, say which one
+  if (!p.soundChecked){
+    p.soundChecked = true; const tk = p.token;
+    setTimeout(() => {
+      if (state.player !== p || p.token !== tk || p.err) return;
+      trackNotice(videoEl, p.stop && p.stop.seen, p.src).then(text => { if (text && state.player === p && p.token === tk) showMsg($('#pNote'), 'warn', text); });
+    }, 4000);
+  }
 });
 videoEl.addEventListener('waiting', () => { if (state.player && !state.player.err) setPState('load', t('p.loading')); });
 videoEl.addEventListener('ended', () => { const p = state.player; if (S.autoNext && p && p.list[p.index].kind === 'episode' && p.index < p.list.length - 1) playerStep(1); });
@@ -2519,19 +2753,23 @@ $('#btnCopy').addEventListener('click', () => {
 /* =====================================================================
    Init
    ===================================================================== */
-loadAccounts();
-syncControls();
-applyI18n();
-updateFormButtons();
-updateLinkPreview();
-updateModeUi();
-renderAccounts();
-renderLib();
-route();
-if (state.accounts.length) checkAll(true);
-renderProxyStatus();
-if (proxyAllowed()) detectProxy().then(() => { renderProxyStatus(); if (PROXY.ok && SECURE_PAGE) renderLib(); });
-{ const a = state.accounts.find(x => isHttp(x.server)); if (a) ensureDirect(a.server); }
+if (POPOUT) startPopout();   // the separate player window: just the player, no lists, no server checks
+else {
+  loadAccounts();
+  syncControls();
+  applyI18n();
+  updateFormButtons();
+  updateLinkPreview();
+  updateModeUi();
+  renderAccounts();
+  renderLib();
+  route();
+  if (state.accounts.length) checkAll(true);
+  renderProxyStatus();
+  renderCaps();
+  if (proxyAllowed()) detectProxy().then(() => { renderProxyStatus(); if (PROXY.ok && SECURE_PAGE) renderLib(); });
+  { const a = state.accounts.find(x => isHttp(x.server)); if (a) ensureDirect(a.server); }
+}
 })();
 </script>
 </body>
