@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ISKANDER — IPTV Player on Web</title>
 <meta name="theme-color" content="#141925">
+<!-- compatibility mode (Dolby audio) loads Mediabunny on demand; its AC-3 add-on imports it by this name -->
+<script type="importmap">{"imports":{"mediabunny":"https://cdn.jsdelivr.net/npm/mediabunny@1.65.2/dist/bundles/mediabunny.min.mjs"}}</script>
 <meta name="description" content="ISKANDER IPTV Player on Web — play live TV, movies and series and export M3U/M3U8 playlists.">
 <meta name="author" content="Eng. Emad Kamel Abdou Iskander">
 <link rel="icon" type="image/png" id="favicon" href="data:image/png;base64,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">
@@ -659,6 +661,13 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
           </div>
         </div>
         <div class="setrow">
+          <div><b data-i18n="pb.compat"></b><p class="hint" data-i18n="pb.compatHint"></p></div>
+          <div class="seg">
+            <label><input type="radio" name="compat" value="auto" data-set="compat"> <span data-i18n="pb.proxyAuto"></span></label>
+            <label><input type="radio" name="compat" value="off" data-set="compat"> <span data-i18n="pb.proxyOff"></span></label>
+          </div>
+        </div>
+        <div class="setrow">
           <div style="min-width:0"><b data-i18n="pb.caps"></b><p class="hint" data-i18n="pb.capsHint"></p><div class="row" id="capsList" style="gap:6px;margin-top:8px"></div></div>
         </div>
       </section>
@@ -736,8 +745,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.6.0',
-  released: '2026-11-13T10:23:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.7.0',
+  released: '2026-11-13T11:30:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -852,6 +861,13 @@ en: {
   'p.popGone':'Nothing to play here — start a video in the main ISKANDER window, then choose “Open in separate window”.',
   'pb.caps':'What this browser can play','pb.capsHint':'Checked in this browser on this device. Channels and films often use Dolby audio (AC-3 / E-AC-3) or HEVC video; if those show ✗, try the site in Microsoft Edge on Windows, which may play them, or use “Play in VLC”.',
   'codec.and':' and ',
+  'pm.decode':'The browser couldn’t decode this video — usually a format this device can’t handle (for example 10-bit HEVC or H.264).\nUse “Play in VLC”, or try another browser.',
+  'pm.details':'Technical details: {d}',
+  'p.checking':'Checking the file…','p.compatLoading':'Compatibility mode: preparing the sound…',
+  'p.compatOn':'Compatibility mode: this film’s {list} audio is converted in the browser so it plays with sound. The picture is not re-encoded.',
+  'p.compatShort':'Compatibility mode: the Dolby audio is converted in the browser.',
+  'pb.compat':'Play unsupported Dolby audio in the browser',
+  'pb.compatHint':'For films and episodes whose audio is Dolby Digital (AC-3) or Dolby Digital Plus (E-AC-3): the start of the file is checked before playing and, if this browser can’t play that audio, it is converted inside the browser while the picture is played as it is. About 2 MB of extra code is loaded the first time. Live channels aren’t covered yet.',
   'pm.noSound':'No sound: this video’s audio is {list}, which this browser can’t play.\nFor sound, use “Play in VLC”, or open the site in Microsoft Edge on Windows.',
   'pm.noPicture':'No picture: this video uses {list}, which this browser can’t show.\nUse “Play in VLC”, or open the site in Microsoft Edge on Windows.',
   'pm.limit':'Your account is already using all of its connections ({a} of {m}).\nStop playback on other devices or apps, wait a minute, then try again.',
@@ -977,6 +993,13 @@ ar: {
   'p.popGone':'لا يوجد ما يُعرض هنا — شغّل الفيديو من نافذة ISKANDER الرئيسية ثم اختر «فتح في نافذة مستقلة».',
   'pb.caps':'ما يستطيع هذا المتصفح تشغيله','pb.capsHint':'تم الفحص في هذا المتصفح على هذا الجهاز. كثير من القنوات والأفلام تستخدم صوت Dolby (AC-3 / E-AC-3) أو فيديو HEVC؛ لو ظهرت بعلامة ✗ جرّب الموقع في متصفح Microsoft Edge على Windows فقد يشغّلها، أو استخدم «تشغيل في VLC».',
   'codec.and':' و',
+  'pm.decode':'لم يستطع المتصفح فك ترميز هذا الفيديو — غالباً صيغة لا يدعمها هذا الجهاز (مثل HEVC أو H.264 بعمق 10-bit).\nاستخدم «تشغيل في VLC»، أو جرّب متصفحاً آخر.',
+  'pm.details':'تفاصيل فنية: {d}',
+  'p.checking':'جاري فحص الملف…','p.compatLoading':'وضع التوافق: جاري تجهيز الصوت…',
+  'p.compatOn':'وضع التوافق: صوت هذا الفيلم بصيغة {list} يتم تحويله داخل المتصفح ليعمل بالصوت. الصورة لا يُعاد ترميزها.',
+  'p.compatShort':'وضع التوافق: يتم تحويل صوت Dolby داخل المتصفح.',
+  'pb.compat':'تشغيل صوت Dolby غير المدعوم داخل المتصفح',
+  'pb.compatHint':'للأفلام والحلقات التي صوتها Dolby Digital (AC-3) أو Dolby Digital Plus (E-AC-3): يُفحص أول الملف قبل التشغيل، ولو المتصفح لا يدعم هذا الصوت يتم تحويله داخل المتصفح بينما تُعرض الصورة كما هي. في أول مرة يتم تحميل حوالي 2 ميجا من الأكواد الإضافية. القنوات المباشرة غير مشمولة حالياً.',
   'pm.noSound':'بدون صوت: صوت هذا الفيديو بصيغة {list}، وهذا المتصفح لا يستطيع تشغيلها.\nللصوت استخدم «تشغيل في VLC»، أو افتح الموقع في متصفح Microsoft Edge على Windows.',
   'pm.noPicture':'بدون صورة: هذا الفيديو يستخدم {list}، وهذا المتصفح لا يستطيع عرضه.\nاستخدم «تشغيل في VLC»، أو افتح الموقع في متصفح Microsoft Edge على Windows.',
   'pm.limit':'حسابك يستخدم كل الاتصالات المسموحة له ({a} من {m}).\nأوقف التشغيل على الأجهزة أو التطبيقات الأخرى، وانتظر دقيقة، ثم حاول مرة أخرى.',
@@ -1004,7 +1027,7 @@ const DEFAULTS = {
   lang: 'en', theme: 'system', fmt: 'ts', autoNext: true, remember: true,
   incLive: true, incMovie: true, incSeries: true,
   mode: 'links', fileName: 'playlist', plus: true, thumbs: true, epg: true, info: true, prefix: true,
-  expLive: true, expMovie: true, expSeries: true, seriesGroup: 'name', proxy: 'auto'
+  expLive: true, expMovie: true, expSeries: true, seriesGroup: 'name', proxy: 'auto', compat: 'auto'
 };
 let S = { ...DEFAULTS };
 try { Object.assign(S, JSON.parse(localStorage.getItem(SET_KEY) || '{}')); } catch {}
@@ -1188,6 +1211,7 @@ function onSetting(k){
   if (k === 'lang'){ rerenderAll(); return; }
   if (k === 'theme'){ applyTheme(); return; }
   if (k === 'remember'){ saveAccounts(); return; }
+  if (k === 'compat'){ compatCache.clear(); return; }
   if (k === 'proxy'){
     if (proxyAllowed()) detectProxy().then(() => { renderProxyStatus(); renderLib(); });
     renderProxyStatus(); renderLib(); return;
@@ -1950,14 +1974,17 @@ async function copyText(text, okMsg){
    ===================================================================== */
 const LIBS = {
   hls: 'https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js',
-  mpegts: 'https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js'
+  mpegts: 'https://cdn.jsdelivr.net/npm/mpegts.js@1.7.3/dist/mpegts.js',
+  mbAc3: 'https://cdn.jsdelivr.net/npm/@mediabunny/ac3@1.65.2/dist/bundles/mediabunny-ac3.min.mjs'
 };
-const pmsg = () => ({ network: t('pm.network'), media: t('pm.media'), lib: t('pm.lib'), unsupported: t('pm.unsupported'), mixed: t('pm.mixed'), codec: t('pm.codecGeneric') });
+const pmsg = () => ({ network: t('pm.network'), media: t('pm.media'), lib: t('pm.lib'), unsupported: t('pm.unsupported'), mixed: t('pm.mixed'), codec: t('pm.codecGeneric'), decode: t('pm.decode') });
 
 /* ---------- Codecs: what this browser can decode, and which one a failing video uses ---------- */
 const CODECS = {
   h264:   ['H.264', 'video/mp4; codecs="avc1.64001F"'],
   hevc:   ['HEVC (H.265)', 'video/mp4; codecs="hvc1.1.6.L93.B0"', 'video/mp4; codecs="hev1.1.6.L93.B0"'],
+  hevc10: ['HEVC 10-bit (Main 10)', 'video/mp4; codecs="hvc1.2.4.L120.B0"', 'video/mp4; codecs="hev1.2.4.L120.B0"'],
+  h264hi10: ['H.264 10-bit (High 10)', 'video/mp4; codecs="avc1.6E0028"'],
   av1:    ['AV1', 'video/mp4; codecs="av01.0.05M.08"'],
   mpeg4:  ['MPEG-4 Part 2 (XviD / DivX)', 'video/mp4; codecs="mp4v.20.9"'],
   mpeg2:  ['MPEG-2', 'video/mpeg', 'video/mp2t; codecs="mp2v"'],
@@ -1980,7 +2007,9 @@ function canDecode(key){
 // codec strings reported by the players → the names above
 function codecKeys(info){
   const keys = [];
-  if (info && info.video && /^(hvc1|hev1)/i.test(info.video)) keys.push('hevc');
+  const v = info && info.video ? String(info.video) : '';
+  if (/^(hvc1|hev1)\.2\./i.test(v)) keys.push('hevc10'); else if (/^(hvc1|hev1)/i.test(v)) keys.push('hevc');
+  else if (/^avc[13]\.(6e|7a|f4)/i.test(v)) keys.push('h264hi10');
   const a = info && info.audio ? String(info.audio).toLowerCase() : '';
   if (a === 'ac-3') keys.push('ac3'); else if (a === 'ec-3') keys.push('eac3'); else if (/^dts/.test(a)) keys.push('dts'); else if (a === 'mlpa') keys.push('truehd');
   return keys;
@@ -1995,8 +2024,9 @@ function renderCaps(){
   box.innerHTML = Object.keys(CODECS).map(k => `<span class="badge ${canDecode(k) ? 'ok' : 'err'}">${canDecode(k) ? '✓' : '✗'} ${esc(CODECS[k][0])}</span>`).join('');
 }
 /* a film the browser refused: read the start of the file (and its end, where an MP4 may keep its index) to name its codecs */
-const CODEC_MARKS = [['avi', /^RIFF[\s\S]{4}AVI /], ['hevc', /V_MPEGH\/ISO\/HEVC|hvc1|hev1/], ['mpeg4', /XVID|DIVX|DX50|V_MPEG4\/ISO\/A?SP|mp4v/], ['mpeg2', /V_MPEG2|mp2v/],
-  ['ac3', /A_AC3|ac-3/], ['eac3', /A_EAC3|ec-3/], ['dts', /A_DTS|dts[cehl]/], ['truehd', /A_TRUEHD|mlpa/]];
+const CODEC_MARKS = [['avi', /^RIFF[\s\S]{4}AVI /], ['hevc', /V_MPEGH\/ISO\/HEVC|hvc1|hev1/], ['h264', /V_MPEG4\/ISO\/AVC|avc1|avc3/],
+  ['mpeg4', /XVID|DIVX|DX50|V_MPEG4\/ISO\/A?SP|mp4v/], ['mpeg2', /V_MPEG2|mp2v/],
+  ['aac', /A_AAC|mp4a/], ['ac3', /A_AC3|ac-3/], ['eac3', /A_EAC3|ec-3/], ['dts', /A_DTS|dts[cehl]/], ['truehd', /A_TRUEHD|mlpa/]];
 const AUDIO_KEYS = ['aac', 'mp3', 'ac3', 'eac3', 'dts', 'truehd'];
 async function readBytes(url, range, max = 1048576){
   const r = await fetch(url, { headers: { Range: range }, cache: 'no-store', signal: AbortSignal.timeout(20000) });
@@ -2049,12 +2079,47 @@ async function vodCodecProbe(src){
   for (const u of urls){
     try {
       const head = await readBytes(u, 'bytes=0-1048575'); if (!head) continue;
-      const tracks = head.text.slice(4, 8) === 'ftyp' ? await mp4TrackText(u, head) : '';
-      return found(tracks || head.text).filter(k => !canDecode(k));
+      const box = containerOf(head.text);
+      const text = (box === 'MP4' ? await mp4TrackText(u, head) : '') || head.text;
+      const all = refineProfiles(text, found(text), box);
+      // the codecs this browser lacks; the whole list and the container ride along for the "technical details" line
+      const bad = all.filter(k => !canDecode(k));
+      bad.found = all; bad.container = box;
+      return bad;
     } catch {}
   }
   return null;
 }
+function containerOf(text){
+  if (text.startsWith('\x1aE\xdf\xa3')) return 'MKV';
+  if (text.slice(4, 8) === 'ftyp') return 'MP4';
+  if (/^RIFF[\s\S]{4}AVI /.test(text)) return 'AVI';
+  if (text.charCodeAt(0) === 0x47 && text.charCodeAt(188) === 0x47) return 'MPEG-TS';
+  return '';
+}
+/* 10-bit video: many devices decode ordinary HEVC / H.264 but not their 10-bit profiles, so read the profile byte */
+function profileByte(text, marker, mkv){
+  const i = text.indexOf(marker); if (i < 0) return -1;
+  if (!mkv) return text.charCodeAt(i + 5);   // 'hvcC' / 'avcC' box: version byte, then the profile byte
+  // Matroska: the CodecPrivate element (ID 63 A2) after the codec name holds the same record
+  const j = text.indexOf('\x63\xA2', i); if (j < 0 || j - i > 400) return -1;
+  const b = text.charCodeAt(j + 2); let len = 1;
+  while (len < 8 && !(b & (0x80 >> (len - 1)))) len++;
+  return text.charCodeAt(j + 2 + len + 1);
+}
+function refineProfiles(text, keys, box){
+  const mkv = box === 'MKV';
+  if (keys.includes('hevc')){
+    const b = profileByte(text, mkv ? 'V_MPEGH/ISO/HEVC' : 'hvcC', mkv);
+    if (b >= 0 && (b & 0x1F) === 2) keys[keys.indexOf('hevc')] = 'hevc10';
+  }
+  if (keys.includes('h264')){
+    const b = profileByte(text, mkv ? 'V_MPEG4/ISO/AVC' : 'avcC', mkv);
+    if ([110, 122, 244].includes(b)) keys[keys.indexOf('h264')] = 'h264hi10';
+  }
+  return keys;
+}
+const probeSummary = keys => [keys.container, ...(keys.found || []).filter(k => k !== 'avi').map(k => CODECS[k] ? CODECS[k][0] : k)].filter(Boolean).join(' · ');
 
 /* a video can play with one track missing when the browser lacks its codec: say so instead of leaving it silent or black */
 async function trackNotice(v, seen, src){
@@ -2081,13 +2146,13 @@ function startPopout(){
   const v = box.querySelector('video'), m = box.querySelector('.pm'), mt = box.querySelector('.pmt'), lg = m.querySelector('.lgmark');
   const say = (text, busy) => { mt.textContent = text; lg.style.display = busy ? '' : 'none'; m.style.display = ''; };
   if (!cfg || !cfg.url){ document.title = 'ISKANDER'; say(t('p.popGone')); return; }
-  cfg = { url: String(cfg.url), kind: String(cfg.kind || ''), title: String(cfg.title || '') };   // own copy: the main window may change or close
+  cfg = { url: String(cfg.url), kind: String(cfg.kind || ''), title: String(cfg.title || ''), compat: !!cfg.compat };   // own copy: the main window may change or close
   document.title = cfg.title + ' — ISKANDER';
   say(t('p.loading'), true);
   const note = box.querySelector('.pnote'); let checked = false;
   v.addEventListener('playing', () => {
     m.style.display = 'none';
-    if (checked) return; checked = true;
+    if (checked || cfg.compat) return; checked = true;
     setTimeout(() => trackNotice(v, stop.seen, cfg.url).then(text => {
       if (!text) return;
       note.textContent = text; note.classList.add('show');
@@ -2095,8 +2160,176 @@ function startPopout(){
     }), 4000);
   });
   v.addEventListener('waiting', () => say(t('p.loading'), true));
-  const stop = attachStream(v, cfg.url, cfg.kind, LIBS, (code, info) => say(code === 'codec' ? codecText(info) : (pmsg()[code] || t('pm.media'))));
+  const onErr = (code, info) => say((code === 'codec' ? codecText(info) : (pmsg()[code] || t('pm.media'))) + (info && info.detail ? '\n' + t('pm.details', { d: info.detail }) : ''));
+  const stop = cfg.compat ? compatStream(v, cfg.url, onErr) : attachStream(v, cfg.url, cfg.kind, LIBS, onErr);
+  if (cfg.compat){ note.textContent = t('p.compatShort'); note.classList.add('show'); setTimeout(() => note.classList.remove('show'), 8000); }
   window.addEventListener('pagehide', stop);
+}
+
+/* =====================================================================
+   Compatibility mode — Dolby audio (AC-3 / E-AC-3) converted in the browser
+   The film is read in byte ranges over one connection. Its picture packets are copied unchanged; only the audio is
+   decoded (FFmpeg's AC-3 / E-AC-3 decoder in WebAssembly, via Mediabunny) and re-encoded to AAC or Opus. The result
+   goes to the normal player through Media Source Extensions, so the browser itself keeps sound and picture in sync.
+   ===================================================================== */
+let mbLoad = null, mbReady = false;
+function loadMediabunny(){
+  return mbLoad || (mbLoad = (async () => {
+    const MB = await import('mediabunny');               // resolved by the import map in <head>
+    const AC = await import(LIBS.mbAc3);
+    AC.registerAc3Decoder();
+    mbReady = true;
+    return MB;
+  })().catch(e => { mbLoad = null; throw e; }));
+}
+const COMPAT_AUDIO = ['ac3', 'eac3'];
+const compatCache = new Map();
+const compatSupported = () => typeof MediaSource !== 'undefined' && typeof AudioEncoder !== 'undefined' && typeof WritableStream !== 'undefined';
+/* is this film's only problem a Dolby audio track this browser can't play? (read once per address) */
+async function compatNeeded(src, key){
+  if (S.compat === 'off' || !compatSupported()) return null;
+  if (compatCache.has(key)) return compatCache.get(key);
+  const bad = await vodCodecProbe(src).catch(() => null);
+  const ans = bad && ['MP4', 'MKV'].includes(bad.container) && bad.length && bad.every(k => COMPAT_AUDIO.includes(k)) ? bad.slice() : null;
+  if (bad) compatCache.set(key, ans);   // a failed read is tried again next time
+  return ans;
+}
+/* surround sound folded into stereo (the encoders are asked for 2 channels); the LFE channel is left out */
+function toStereo(MB, s){
+  const n = s.numberOfChannels; if (n === 2) return s;
+  const F = s.numberOfFrames, ch = [];
+  for (let i = 0; i < n; i++){ const a = new Float32Array(F); s.copyTo(a, { planeIndex: i, format: 'f32-planar' }); ch.push(a); }
+  const data = new Float32Array(F * 2), k = 0.7071, g = n >= 6 ? 0.6 : n > 2 ? 0.8 : 1;
+  for (let f = 0; f < F; f++){
+    let l = ch[0][f], r = (ch[1] || ch[0])[f];
+    if (n >= 3){ l += k * ch[2][f]; r += k * ch[2][f]; }                                    // centre
+    for (let i = 4; i < n; i += 2){ l += k * ch[i][f]; if (ch[i + 1]) r += k * ch[i + 1][f]; }   // surrounds
+    data[f] = l * g; data[F + f] = r * g;
+  }
+  return new MB.AudioSample({ data, format: 'f32-planar', numberOfChannels: 2, sampleRate: s.sampleRate, timestamp: s.timestamp });
+}
+function compatStream(video, url, onError){
+  let dead = false, run = null, ms = null, sb = null, objUrl = null, input = null, seekTimer = 0;
+  const seen = {}, AHEAD = 60, BEHIND = 30;
+  const wait = t => new Promise(r => setTimeout(r, t));
+  const fail = (code, detail) => { if (!dead) onError(code, { detail: 'compatibility mode: ' + detail }); };
+  const sbIdle = () => sb && sb.updating ? new Promise(r => sb.addEventListener('updateend', r, { once: true })) : Promise.resolve();
+  const sbDo = fn => new Promise((ok, bad) => {
+    const done = () => { sb.removeEventListener('error', err); ok(); };
+    const err = () => { sb.removeEventListener('updateend', done); bad(new Error('SourceBuffer error')); };
+    sb.addEventListener('updateend', done, { once: true }); sb.addEventListener('error', err, { once: true });
+    try { fn(); } catch (e){ sb.removeEventListener('updateend', done); sb.removeEventListener('error', err); bad(e); }
+  });
+  const bufferedAt = t => { if (!sb) return false; for (let i = 0; i < sb.buffered.length; i++) if (t >= sb.buffered.start(i) - 0.2 && t < sb.buffered.end(i)) return true; return false; };
+  const bufferedEnd = () => sb && sb.buffered.length ? sb.buffered.end(sb.buffered.length - 1) : 0;
+
+  async function startRun(from){
+    const me = { stop: false };
+    if (run) run.stop = true;            // the previous run notices and quits
+    run = me;
+    try {
+      const MB = await loadMediabunny();
+      if (dead || me.stop) return;
+      if (!input) input = new MB.Input({ formats: MB.ALL_FORMATS, source: new MB.UrlSource(url, { parallelism: 1, getRetryDelay: n => n < 3 ? 1 + n : null }) });
+      const vt = await input.getPrimaryVideoTrack(), at = await input.getPrimaryAudioTrack();
+      if (!vt) return fail('media', 'no video track');
+      seen.video = await vt.getCodecParameterString().catch(() => vt.codec);
+      if (!ms){
+        ms = new MediaSource(); objUrl = URL.createObjectURL(ms); video.src = objUrl;
+        await new Promise(r => ms.addEventListener('sourceopen', r, { once: true }));
+        ms.duration = await input.computeDuration();
+      }
+      if (dead || me.stop) return;
+      const audioCodec = at ? await MB.getFirstEncodableAudioCodec(['aac', 'opus']) : null;
+      if (at && !audioCodec) return fail('codec', 'this browser has no AAC or Opus encoder');
+      const vsink = new MB.EncodedPacketSink(vt);
+      const key = (from > 0 && await vsink.getKeyPacket(from)) || await vsink.getFirstKeyPacket();
+      if (!key) return fail('media', 'no key frame');
+      // a new start point: what is buffered belongs to the old one
+      if (sb){
+        await sbIdle();
+        if (ms.readyState === 'open') sb.abort();
+        if (sb.buffered.length) await sbDo(() => sb.remove(0, Infinity));
+      }
+      if (dead || me.stop) return;
+      let out;
+      const writable = new WritableStream({
+        async write(chunk){
+          if (dead || me.stop) throw new Error('stopped');
+          if (!sb) sb = ms.addSourceBuffer(await out.getMimeType());
+          // stay about a minute ahead of the playhead (this also pauses the reading while paused)
+          while (!dead && !me.stop && bufferedEnd() - video.currentTime > AHEAD) await wait(400);
+          if (dead || me.stop) throw new Error('stopped');
+          await sbIdle();
+          try { await sbDo(() => sb.appendBuffer(chunk.data)); }
+          catch (e){
+            if (!e || e.name !== 'QuotaExceededError') throw e;
+            await sbDo(() => sb.remove(0, Math.max(0.1, video.currentTime - 5)));
+            await sbDo(() => sb.appendBuffer(chunk.data));
+          }
+          // let go of what was played long ago
+          if (sb.buffered.length && video.currentTime - sb.buffered.start(0) > BEHIND + 15) await sbDo(() => sb.remove(0, video.currentTime - BEHIND));
+        }
+      });
+      out = new MB.Output({ format: new MB.Mp4OutputFormat({ fastStart: 'fragmented' }), target: new MB.StreamTarget(writable, { chunked: true, chunkSize: 512 * 1024 }) });
+      const vsrc = new MB.EncodedVideoPacketSource(vt.codec); out.addVideoTrack(vsrc);
+      let asrc = null;
+      if (at){ asrc = new MB.AudioSampleSource({ codec: audioCodec, quality: new MB.Quality({ bitrate: 192e3 }) }); out.addAudioTrack(asrc); }
+      await out.start();
+      const vcfg = await vt.getDecoderConfig();
+      const videoLoop = (async () => {
+        let first = true;
+        for await (const pk of vsink.packets(key)){
+          if (dead || me.stop) break;
+          await vsrc.add(pk, first ? { decoderConfig: vcfg } : undefined); first = false;
+        }
+        vsrc.close();
+      })();
+      const audioLoop = at ? (async () => {
+        for await (const s of new MB.AudioSampleSink(at).samples(key.timestamp)){
+          if (dead || me.stop){ s.close(); break; }
+          const st = toStereo(MB, s);
+          await asrc.add(st);
+          if (st !== s) st.close();
+          s.close();
+        }
+        asrc.close();
+      })() : Promise.resolve();
+      await Promise.all([videoLoop, audioLoop]);
+      if (dead || me.stop){ await out.cancel().catch(() => {}); return; }
+      await out.finalize();
+      await sbIdle();
+      if (!dead && !me.stop && ms.readyState === 'open') ms.endOfStream();
+    } catch (e){
+      if (dead || me.stop) return;
+      const msg = String(e && e.message || e).slice(0, 160);
+      fail(!mbReady ? 'lib' : /fetch|network|HTTP|load|CORS/i.test(msg) ? 'network' : 'media', msg);
+    }
+  }
+  function onSeeking(){
+    if (dead) return;
+    const t = video.currentTime;
+    if (bufferedAt(t)) return;
+    // a short jump into what is being prepared right now: just wait for it
+    if (run && !run.stop && sb && sb.buffered.length && t >= sb.buffered.start(0) && t <= bufferedEnd() + 10) return;
+    clearTimeout(seekTimer);
+    seekTimer = setTimeout(() => { if (!dead && !bufferedAt(video.currentTime)) startRun(video.currentTime); }, 250);
+  }
+  video.addEventListener('seeking', onSeeking);
+  video.onerror = () => { const er = video.error; fail(er && er.code === 2 ? 'network' : 'media', er ? 'MediaError ' + er.code + (er.message ? ': ' + er.message : '') : 'video error'); };
+  startRun(0);
+  video.play().catch(() => {});
+  const stop = () => {
+    dead = true; clearTimeout(seekTimer);
+    video.removeEventListener('seeking', onSeeking); video.onerror = null;
+    if (run) run.stop = true;
+    try { if (input && input.dispose) input.dispose(); } catch {}
+    try { video.pause(); } catch {}
+    video.removeAttribute('src'); try { video.load(); } catch {}
+    if (objUrl) URL.revokeObjectURL(objUrl);
+  };
+  stop.seen = seen; stop.compat = true;
+  return stop;
 }
 
 // Self-contained (also injected into the separate player window) — must not use outer variables.
@@ -2116,7 +2349,7 @@ function attachStream(video, url, kind, libs, onError){
   function codecBad(vc, ac){
     var bad = null;
     function ok(type){ try { return (window.MediaSource && MediaSource.isTypeSupported(type)) || !!video.canPlayType(type); } catch (e){ return true; } }
-    if (vc && /^(hvc1|hev1)/i.test(vc) && !ok('video/mp4; codecs="' + vc + '"')) (bad = bad || {}).video = vc;
+    if (vc && /^(hvc1|hev1|avc[13]\.(6e|7a|f4))/i.test(vc) && !ok('video/mp4; codecs="' + vc + '"')) (bad = bad || {}).video = vc;
     if (ac && /^(ac-3|ec-3|dts[cehl]?|mlpa)$/i.test(ac) && !ok('audio/mp4; codecs="' + ac + '"')) (bad = bad || {}).audio = ac;
     return bad;
   }
@@ -2124,7 +2357,11 @@ function attachStream(video, url, kind, libs, onError){
   var inner = /\/api\/proxy\?/.test(url) ? (url.match(/[?&]u=([^&#]+)/) || [])[1] : null;
   var path = (inner ? decodeURIComponent(inner) : url).split(/[?#]/)[0];
   var ext = ((path.match(/\.([a-z0-9]+)$/i) || [])[1] || '').toLowerCase();
-  video.onerror = function(){ fail('media'); };
+  video.onerror = function(){
+    // 2 = the download broke, 3 = the decoder failed, 4 = format not supported; Chrome's message says more
+    var er = video.error, c = er && er.code;
+    fail(c === 2 ? 'network' : c === 3 ? 'decode' : 'media', { detail: er ? 'MediaError ' + c + (er.message ? ': ' + er.message : '') : '' });
+  };
   (async function(){
     try {
       if (ext === 'm3u8'){
@@ -2141,7 +2378,8 @@ function attachStream(video, url, kind, libs, onError){
           hls.on(lib.Events.ERROR, function(e, d){
             if (!d || !d.fatal) return;
             var bad = codecBad(seen.video, seen.audio) || (d.details === 'manifestIncompatibleCodecsError' ? {} : null);
-            fail(bad ? 'codec' : d.type === 'networkError' ? 'network' : 'media', bad);
+            var why = 'hls.js: ' + d.details + (d.response && d.response.code ? ' (HTTP ' + d.response.code + ')' : '');
+            fail(bad ? 'codec' : d.type === 'networkError' ? 'network' : 'media', Object.assign({ detail: why }, bad || {}));
           });
           hls.loadSource(url); hls.attachMedia(video);
         } else video.src = url;
@@ -2152,8 +2390,9 @@ function attachStream(video, url, kind, libs, onError){
         mp = M.createPlayer({ type: 'mpegts', isLive: kind === 'live', url: url },
           { enableWorker: true, lazyLoad: false, liveBufferLatencyChasing: kind === 'live' });
         mp.on(M.Events.MEDIA_INFO, function(mi){ if (mi){ seen.video = mi.videoCodec; seen.audio = mi.audioCodec; } });
-        mp.on(M.Events.ERROR, function(type){
-          if (type === M.ErrorTypes.NETWORK_ERROR) return fail('network');
+        mp.on(M.Events.ERROR, function(type, det, inf){
+          var why = 'mpegts.js: ' + type + (det ? ' / ' + det : '') + (inf && (inf.msg || inf.code) ? ' (' + (inf.msg || inf.code) + ')' : '');
+          if (type === M.ErrorTypes.NETWORK_ERROR) return fail('network', { detail: why });
           // a track the browser can't decode (e.g. Dolby audio) fails here while the other may still play: wait and see
           setTimeout(function(){
             if (dead) return;
@@ -2161,7 +2400,7 @@ function attachStream(video, url, kind, libs, onError){
             if (mi){ seen.video = seen.video || mi.videoCodec; seen.audio = seen.audio || mi.audioCodec; }
             if (video.readyState >= 2 && !video.error) return;   // still playing: the notice names the missing track
             var bad = codecBad(seen.video, seen.audio);
-            fail(bad ? 'codec' : 'media', bad);
+            fail(bad ? 'codec' : 'media', Object.assign({ detail: why }, bad || {}));
           }, 2500);
         });
         mp.attachMediaElement(video); mp.load();
@@ -2335,7 +2574,8 @@ function showPlayerError(code){
   p.err = code;
   const a = code === 'codec' || mixedBlocked(p.list[p.index].url) ? null : altFormat(p.list[p.index]);
   setPState('err', (p.errInfo ? t(p.errInfo.key, p.errInfo.vars) : code === 'codec' ? codecText(p.codec) : (pmsg()[code] || t('pm.media'))) +
-    (p.tried && p.tried.length > 1 ? '\n' + t('pm.tried', { list: p.tried.join(' → ') }) : ''),
+    (p.tried && p.tried.length > 1 ? '\n' + t('pm.tried', { list: p.tried.join(' → ') }) : '') +
+    ((p.errInfo && p.errInfo.extra) || p.detail ? '\n' + t('pm.details', { d: [p.errInfo && p.errInfo.extra, p.detail].filter(Boolean).join(' · ') }) : ''),
     `<div class="row" style="justify-content:center">${a ? `<button class="btn sm" type="button" data-pact="fmt">${esc(t('p.tryFmt', { f: a.label }))}</button>` : ''}<button class="btn sm" type="button" data-pact="vlc">${esc(t('p.vlc'))}</button><button class="btn sm" type="button" data-pact="copy">${esc(t('p.copy'))}</button></div>`);
 }
 function updatePlayerUi(){
@@ -2403,9 +2643,14 @@ async function playDiagnosis(e, src, triedDirect, code){
     } catch {}
   }
   // a file the browser refused: read its header to name the codec it uses
-  if (code === 'media'){
+  if (code === 'media' || code === 'decode'){
     const keys = await vodCodecProbe(src).catch(() => null);
-    if (keys && keys.length) return { key: 'pm.codec', vars: { list: codecNames(keys) } };
+    const extra = keys ? probeSummary(keys) : '';
+    if (keys && keys.length) return { key: 'pm.codec', vars: { list: codecNames(keys) }, extra };
+    if (extra){
+      const d = isProxiedUrl(src) && !triedDirect ? await proxyDiagnosis(src) : null;
+      return Object.assign(d || { key: code === 'decode' ? 'pm.decode' : 'pm.media' }, { extra });
+    }
   }
   // the proxy's own report only helps when the browser had no direct way to the server
   return isProxiedUrl(src) && !triedDirect ? proxyDiagnosis(src) : null;
@@ -2434,7 +2679,7 @@ async function planRoutes(e){
 }
 async function playCurrent(retry){
   const p = state.player; if (!p) return;
-  stopPlayback(); p.err = null; p.errInfo = null; p.diag = false; p.codec = null;
+  stopPlayback(); p.err = null; p.errInfo = null; p.diag = false; p.codec = null; p.detail = '';
   const e = p.list[p.index];
   const token = p.token = (p.token || 0) + 1;
   $('#pLogo').innerHTML = e.logo ? `<img src="${esc(mediaUrl(e.logo))}" alt="" referrerpolicy="no-referrer" data-ph="${esc(initials(e.title))}">` : '';
@@ -2454,14 +2699,25 @@ async function playCurrent(retry){
   p.current = r; p.tried.push(srcLabel(src));
   p.src = src; p.soundChecked = false; hideMsg($('#pNote'));
   updatePlayerUi();
-  p.stop = attachStream(v, src, e.kind, LIBS, (code, info) => {
+  // films whose Dolby audio this browser can't play: compatibility mode, decided from the start of the file
+  p.compat = null;
+  if (e.kind === 'movie' || e.kind === 'episode'){
+    setPState('load', t('p.checking'));
+    p.compat = await compatNeeded(src, e.url).catch(() => null);
+    if (state.player !== p || p.token !== token) return;
+    setPState('load', t(p.compat ? 'p.compatLoading' : 'p.loading'));
+    if (p.compat) showMsg($('#pNote'), 'ok', t('p.compatOn', { list: codecNames(p.compat) }));
+  }
+  const engine = p.compat ? cb => compatStream(v, src, cb) : cb => attachStream(v, src, e.kind, LIBS, cb);
+  p.stop = engine((code, info) => {
     if (state.player !== p || p.token !== token || p.err) return;
     clearTimeout(p.timer);
     // move on to the next way of playing it (another way can't fix a codec the browser lacks)
     let next = p.step + 1;
-    if (code === 'media') while (p.routes[next] && p.routes[next].alt) next++;
-    if ((code === 'network' || code === 'media') && p.routes[next]){ p.step = next; playCurrent(true); return; }
+    if (code === 'media' || code === 'decode') while (p.routes[next] && p.routes[next].alt) next++;
+    if ((code === 'network' || code === 'media' || code === 'decode') && p.routes[next]){ p.step = next; playCurrent(true); return; }
     if (code === 'codec') p.codec = info || {};
+    p.detail = (info && info.detail) || '';
     showPlayerError(code);
     if (p.diag || code === 'codec') return;
     p.diag = true;
@@ -2515,7 +2771,7 @@ function popout(){
   if (!src){ toast(t('p.popMixed')); return; }
   if (ON_WEB){
     // a real page of this site, so the browser applies the site's permissions to it exactly as to this window
-    window.__iskanderPopout = { url: src, kind: e.kind, title: e.title };
+    window.__iskanderPopout = { url: src, kind: e.kind, title: e.title, compat: !!(state.player && state.player.compat) };
     const pw = window.open(location.origin + location.pathname + '?popout=1', 'iskander_player', 'width=960,height=560');
     if (!pw){ toast(t('p.popBlocked')); return; }
     closePlayer();
@@ -2539,7 +2795,7 @@ videoEl.addEventListener('playing', () => {
   // remember whether the proxy was needed, so the next channel starts the right way
   if (p.current){ if (!p.current.proxy) state.preferProxy = false; else if (p.step > 0) state.preferProxy = true; }
   // a few seconds in: is there sound and picture? if a codec is missing, say which one
-  if (!p.soundChecked){
+  if (!p.soundChecked && !p.compat){
     p.soundChecked = true; const tk = p.token;
     setTimeout(() => {
       if (state.player !== p || p.token !== tk || p.err) return;
