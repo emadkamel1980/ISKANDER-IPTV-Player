@@ -696,11 +696,13 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
         <div class="row mt">
           <button class="btn primary" id="btnAdd" type="button"></button>
           <button class="btn" id="btnCheck" type="button"><span class="spin"></span><span data-i18n="f.test"></span></button>
+          <button class="btn" id="btnEpgCheck" type="button"><span class="spin"></span><span data-i18n="f.epgCheck"></span></button>
           <button class="btn" id="btnCopyLink" type="button" data-i18n="f.copyLink"></button>
           <button class="btn" id="btnOpenLink" type="button" data-i18n="f.download"></button>
           <button class="btn hidden" id="btnCancelEdit" type="button" data-i18n="f.cancel"></button>
         </div>
         <div class="msg" id="checkMsg"></div>
+        <div class="msg" id="epgMsg"></div>
 
         <div id="infoPanel" class="hidden">
           <div class="infohead" data-i18n="i.groupAccount"></div>
@@ -832,8 +834,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.8.0',
-  released: '2026-11-15T18:24:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.8.1',
+  released: '2026-11-15T19:22:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -849,6 +851,13 @@ en: {
   'g.loading':'Loading the guide…','g.none':'The server has no programme guide for this channel.','g.noneShort':'No guide','g.noneList':'No channels match.',
   'g.now':'Now','g.nextAt':'Next {at}: {t}','g.minLeft':'{n} min left','g.live':'Watch live','g.watch':'Watch again',
   'g.archive':'Catch-up: {n} days','g.yesterday':'Yesterday','g.today':'Today','g.tomorrow':'Tomorrow',
+  'f.epgCheck':'Check EPG support','ec.running':'Checking the programme guide…',
+  'ec.yes':'This server provides a programme guide (EPG).','ec.partial':'This server provides a guide for some channels only.','ec.no':'No programme guide was found on this server.',
+  'ec.noLive':'This account has no live channels.','ec.err':'The check failed: {m}',
+  'ec.xml.ok':'• Full guide file (XMLTV): available{size}','ec.xml.size':' — about {mb}','ec.xml.empty':'• Full guide file (XMLTV): empty',
+  'ec.xml.fail':'• Full guide file (XMLTV): not available (HTTP {s})','ec.xml.blocked':'• Full guide file (XMLTV): couldn’t be read from this page (no CORS permission, or blocked by the browser)',
+  'ec.ids':'• Channels with a guide ID: {n} of {t} ({p}%)','ec.sample':'• Sample check: {n} of {t} channels have programmes now or coming up',
+  'ec.with':'   With a guide: {list}','ec.without':'   Without a guide: {list}','ec.days':'• Schedule of “{ch}”: {from} → {to} (about {d} days)',
   'g.pick':'Pick a channel to see its schedule.','g.err':'Couldn’t load the guide: {m}','g.full':'TV guide',
   'd.loadingInfo':'Loading more details from the server…','d.infoErr':'The server sent no further details for this title.',
   'd.tech':'Technical details','d.nowNext':'On now and next','d.more':'More details','d.trailer':'Trailer',
@@ -1003,6 +1012,13 @@ ar: {
   'g.loading':'جاري تحميل الدليل…','g.none':'السيرفر لا يوفّر دليل برامج لهذه القناة.','g.noneShort':'لا يوجد دليل','g.noneList':'لا توجد قنوات مطابقة.',
   'g.now':'الآن','g.nextAt':'التالي {at}: {t}','g.minLeft':'متبقٍ {n} دقيقة','g.live':'مشاهدة مباشرة','g.watch':'مشاهدة الإعادة',
   'g.archive':'الإعادة (Catch-up): {n} أيام','g.yesterday':'أمس','g.today':'اليوم','g.tomorrow':'غداً',
+  'f.epgCheck':'فحص دعم الدليل (EPG)','ec.running':'جاري فحص دليل البرامج…',
+  'ec.yes':'هذا السيرفر يوفّر دليل البرامج (EPG).','ec.partial':'هذا السيرفر يوفّر الدليل لبعض القنوات فقط.','ec.no':'لم يتم العثور على دليل برامج على هذا السيرفر.',
+  'ec.noLive':'هذا الحساب لا يحتوي على قنوات مباشرة.','ec.err':'تعذّر الفحص: {m}',
+  'ec.xml.ok':'• ملف الدليل الكامل (XMLTV): متاح{size}','ec.xml.size':' — حوالي {mb}','ec.xml.empty':'• ملف الدليل الكامل (XMLTV): فارغ',
+  'ec.xml.fail':'• ملف الدليل الكامل (XMLTV): غير متاح (HTTP {s})','ec.xml.blocked':'• ملف الدليل الكامل (XMLTV): تعذّرت قراءته من هذه الصفحة (السيرفر لا يرسل إذن CORS، أو منعه المتصفح)',
+  'ec.ids':'• قنوات لها معرّف دليل: {n} من {t} ({p}%)','ec.sample':'• فحص عينة: {n} من {t} قنوات عليها برامج الآن أو قادمة',
+  'ec.with':'   لها دليل: {list}','ec.without':'   بدون دليل: {list}','ec.days':'• جدول «{ch}»: من {from} إلى {to} (حوالي {d} أيام)',
   'g.pick':'اختر قناة لعرض جدولها.','g.err':'تعذّر تحميل الدليل: {m}','g.full':'دليل البرامج',
   'd.loadingInfo':'جاري تحميل تفاصيل إضافية من السيرفر…','d.infoErr':'السيرفر لم يرسل تفاصيل إضافية لهذا العنوان.',
   'd.tech':'تفاصيل فنية','d.nowNext':'يُعرض الآن وبعده','d.more':'تفاصيل أكثر','d.trailer':'الإعلان',
@@ -3366,6 +3382,83 @@ function progRow(c, p, i, now){
     <div class="gpa">${on ? `<button class="btn sm play" type="button" data-glive>${PLAY_SVG} ${esc(t('g.live'))}</button>` : canCatchup(c.it, p, now) ? `<button class="btn sm" type="button" data-gcatch="${i}">${PLAY_SVG} ${esc(t('g.watch'))}</button>` : ''}</div>
   </div>`;
 }
+/* ---------- "Check EPG support": the guide file, guide IDs, a sample of channels and how far the schedule reaches ---------- */
+/* reads only the start of a (possibly huge) text file: direct when the browser may, otherwise through the site's proxy */
+async function peekText(url, max){
+  const one = async u => {
+    const ctrl = new AbortController(), tm = setTimeout(() => ctrl.abort(), 30000);
+    try {
+      const r = await fetch(u, { cache: 'no-store', signal: ctrl.signal });
+      if (r.headers.get('x-iskander-proxy') === 'error'){ let j = {}; try { j = await r.json(); } catch {} throw new FriendlyError(j.error || 'proxy'); }
+      const size = Number(r.headers.get('content-length')) || 0;
+      if (!r.ok || !r.body) return { status: r.status, text: '', size, cut: false };
+      const rd = r.body.getReader(), dec = new TextDecoder(); let text = '', n = 0, cut = false;
+      while (true){
+        const { done, value } = await rd.read(); if (done) break;
+        n += value.byteLength; text += dec.decode(value, { stream: true });
+        if (n >= max){ cut = true; break; }
+      }
+      rd.cancel().catch(() => {});
+      return { status: r.status, text, size, cut };
+    } finally { clearTimeout(tm); ctrl.abort(); }
+  };
+  await ensureDirect(url);
+  if (mixedBlocked(url)){
+    if (proxyAllowed() && await detectProxy()) return one(proxied(url));
+    throw new FriendlyError('mixed');
+  }
+  try { return await one(url); }
+  catch (e){ if (!(e instanceof FriendlyError) && proxyAllowed() && await detectProxy()) return one(proxied(url)); throw e; }
+}
+async function checkEpgSupport(){
+  const btn = $('#btnEpgCheck'), msg = $('#epgMsg'), acc = formAccount();
+  if (!formValid(acc, msg)) return;
+  setBusy(btn, true); showMsg(msg, 'warn', t('ec.running'));
+  try {
+    // the channels: from the Library when this account is loaded there, otherwise straight from the server
+    const have = state.sources.find(s => s.sid === 'a:' + accKey(acc) && s.items.some(it => it.kind === 'live'));
+    const chans = have ? have.items.filter(it => it.kind === 'live').map(it => ({ id: it.id, name: it.name, tvgId: it.tvgId }))
+      : asArray(await apiGet(acc, 'get_live_streams', 240000)).map(s => ({ id: s.stream_id, name: title(s.name), tvgId: s.epg_channel_id || '' }));
+    const lines = [];
+    // 1) the full guide file (XMLTV) — only its start is read
+    let xmlOk = false;
+    try {
+      const x = await peekText(xmltvUrl(acc), 262144);
+      const mb = x.size ? t('ec.xml.size', { mb: fmtBytes(x.size) }) : '';
+      if (x.status >= 400) lines.push(t('ec.xml.fail', { s: x.status }));
+      else if (/<programme[\s>]/.test(x.text) || (/<tv[\s>]/.test(x.text) && (x.cut || x.size > 2097152))){ xmlOk = true; lines.push(t('ec.xml.ok', { size: mb })); }
+      else lines.push(t('ec.xml.empty'));
+    } catch (e){ lines.push(t('ec.xml.blocked')); }
+    if (!chans.length){ showMsg(msg, xmlOk ? 'warn' : 'err', [t('ec.noLive'), ...lines].join('\n')); return; }
+    // 2) how many channels carry a guide ID
+    const withId = chans.filter(c => c.tvgId);
+    lines.push(t('ec.ids', { n: nf(withId.length), t: nf(chans.length), p: Math.round(withId.length / chans.length * 100) }));
+    // 3) a spread-out sample of up to 10 channels: is anything on now or coming up?
+    const pool = withId.length ? withId : chans, n = Math.min(10, pool.length);
+    const sample = Array.from({ length: n }, (_, i) => pool[Math.floor(i * pool.length / n)]);
+    const src = { sid: 'chk:' + accKey(acc), acc }, now = Date.now() / 1000;
+    const res = await Promise.all(sample.map(c => queued(() => getEpg(src, c, false)).then(l => l.some(p => p.stop > now), () => false)));
+    const hits = sample.filter((c, i) => res[i]), miss = sample.filter((c, i) => !res[i]);
+    const iso = v => '⁨' + v + '⁩';   // keeps an Arabic name from scrambling an English line, and the reverse
+    const names = l => l.slice(0, 4).map(c => iso(c.name)).join(S.lang === 'ar' ? '، ' : ', ') + (l.length > 4 ? '…' : '');
+    lines.push(t('ec.sample', { n: nf(hits.length), t: nf(sample.length) }));
+    if (hits.length) lines.push(t('ec.with', { list: names(hits) }));
+    if (hits.length && miss.length) lines.push(t('ec.without', { list: names(miss) }));
+    // 4) how far one channel's schedule reaches
+    if (hits.length){
+      try {
+        const full = await getEpg(src, hits[0], true);
+        if (full.length){
+          const a = full[0].start, b = full[full.length - 1].stop;
+          lines.push(t('ec.days', { ch: iso(hits[0].name), from: fmtDate(a, 'short'), to: fmtDate(b, 'short'), d: nf(Math.max(1, Math.round((b - a) / 86400))) }));
+        }
+      } catch {}
+    }
+    const verdict = hits.length && hits.length >= Math.ceil(sample.length * 0.7) ? 'yes' : hits.length || xmlOk ? 'partial' : 'no';
+    showMsg(msg, verdict === 'yes' ? 'ok' : verdict === 'partial' ? 'warn' : 'err', [t('ec.' + verdict), ...lines].join('\n'));
+  } catch (e){ showMsg(msg, 'err', t('ec.err', { m: e.message })); }
+  finally { setBusy(btn, false); }
+}
 function startGuideTimer(){ if (!G.timer) G.timer = setInterval(refreshGuide, 60000); }
 function stopGuideTimer(){ clearInterval(G.timer); G.timer = 0; }
 /* once a minute: move the progress bars on, and ask again for rows whose guide is older than ten minutes */
@@ -3513,6 +3606,7 @@ $('#accRows').addEventListener('click', async e => {
 });
 $('#btnCheckAll').addEventListener('click', () => checkAll(false));
 $('#btnCheck').addEventListener('click', checkAccount);
+$('#btnEpgCheck').addEventListener('click', checkEpgSupport);
 $('#btnCopyLink').addEventListener('click', () => {
   const a = formAccount(); if (!formValid(a, $('#checkMsg'))) return;
   hideMsg($('#checkMsg')); copyText(getPhpUrl(a), t('t.linkCopied'));
