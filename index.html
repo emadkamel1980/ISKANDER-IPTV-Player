@@ -315,6 +315,73 @@ pre.preview{direction:ltr;text-align:left;background:var(--code-bg);color:var(--
 .epact .play{grid-column:1/-1}
 @media (max-width:560px){.ethumb{width:92px}.ep{flex-wrap:wrap}.epact{width:100%;grid-template-columns:repeat(3,minmax(0,1fr))}.epact .play{grid-column:auto}.epact .btn{padding-inline:6px}}
 
+/* ===== Details window ===== */
+.dback{position:relative;height:190px;margin:-20px -20px 16px;border-radius:18px 18px 0 0;overflow:hidden;background:var(--surface-2)}
+.dback img{width:100%;height:100%;object-fit:cover;display:block}
+.dback::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 35%,var(--surface))}
+.dorig{color:var(--muted);font-size:13.5px;margin:-4px 0 8px}
+.facts{display:grid;grid-template-columns:minmax(110px,max-content) minmax(0,1fr);gap:7px 18px;margin:0;font-size:14px}
+.facts dt{color:var(--muted);font-weight:600}
+.facts dd{margin:0;word-break:break-word}
+.dfacts{margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.dsec{margin-top:18px}
+.dsec h4{margin:0 0 8px;font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.nn{border:1px solid var(--border);border-radius:12px;padding:9px 12px;margin-top:8px}
+.nn.on{background:var(--accent-soft)}
+.nnrow{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.nnrow time{font-variant-numeric:tabular-nums;color:var(--muted);font-size:13px;direction:ltr;unicode-bidi:isolate}
+.nndesc{margin:4px 0 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.pbar{display:block;height:4px;background:var(--surface-2);border-radius:4px;overflow:hidden;margin:6px 0 2px}
+.pbar i{display:block;height:100%;background:var(--hot)}
+.seasonhead{display:flex;gap:12px;align-items:flex-start;margin:4px 0 8px}
+.seasonhead img{width:76px;border-radius:8px;flex:none}
+.epd{margin-top:4px;font-size:13.5px}
+.epd summary{cursor:pointer;color:var(--accent-text);font-weight:600;font-size:13px}
+.epd p{margin:4px 0}
+@media (max-width:560px){.facts{grid-template-columns:minmax(0,1fr)}.facts dt{margin-top:6px}.dback{height:130px}}
+
+/* ===== TV guide ===== */
+.guide{display:grid;grid-template-columns:330px minmax(0,1fr);gap:16px;align-items:start}
+.gside{position:sticky;top:84px;max-height:calc(100vh - 110px);display:flex;flex-direction:column;padding:12px;margin:0}
+.glist{overflow:auto;margin-top:10px;display:flex;flex-direction:column;gap:2px;min-height:0;flex:1}
+.gch{display:flex;gap:10px;align-items:center;text-align:start;width:100%;padding:7px 8px;border-radius:10px;border:1px solid transparent;background:none;color:inherit;font:inherit;cursor:pointer}
+.gch:hover{background:var(--surface-2)}
+.gch.on{background:var(--accent-soft);border-color:var(--border)}
+.glogo{width:58px;height:38px;flex:none;border-radius:7px;background:var(--surface-2);display:grid;place-items:center;overflow:hidden}
+.glogo img{width:100%;height:100%;object-fit:contain;padding:3px}
+.glogo .ph{font-size:13px}
+.glogo.big{width:84px;height:54px}
+.gtx{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.gtx b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gnow,.gnext{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gnow{color:var(--text)}
+.gtx .pbar{margin:3px 0}
+.gmain{min-width:0;margin:0}
+.gdhead{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.gdname{flex:1;min-width:0}
+.gdname h2{margin:0}
+.gdname .hint{margin:2px 0 0}
+.gdays{margin:14px 0 8px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:2px}
+.gprogs{position:relative;max-height:calc(100vh - 300px);overflow:auto;border-top:1px solid var(--border)}
+.gp{display:grid;grid-template-columns:70px minmax(0,1fr) auto;gap:12px;padding:10px 6px;border-bottom:1px solid var(--border);cursor:pointer}
+.gp.past{opacity:.62}
+.gp.now{background:var(--accent-soft);border-radius:10px}
+.gtime{font-variant-numeric:tabular-nums;font-weight:700;direction:ltr;text-align:start}
+.gtime span{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.gpm b{display:block}
+.gnowtag{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+.gdesc{margin:4px 0 0;color:var(--muted);font-size:13.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gp.open .gdesc{display:block}
+.gpa{display:flex;align-items:flex-start}
+@media (max-width:860px){
+  .guide{grid-template-columns:minmax(0,1fr)}
+  .gside{position:static;max-height:none}
+  .glist{max-height:44vh;flex:none}
+  .gprogs{max-height:70vh}
+}
+@media (max-width:440px){ .nav a{padding:8px 6px;font-size:13.5px} .nav a svg{display:none} }
+@media (max-width:480px){.gp{grid-template-columns:58px minmax(0,1fr)}.gpa{grid-column:2}}
+
 /* ===== Player ===== */
 .modal.player{z-index:40;align-items:center}
 .pbox{background:var(--surface);border:1px solid var(--border);border-radius:18px;width:100%;max-width:1040px;padding:14px;position:relative}
@@ -383,6 +450,7 @@ html.popout body > :not(#popout):not(.sprite){display:none !important}
     </a>
     <nav class="nav" aria-label="Main">
       <a href="#library" data-scr="library"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="13" rx="2"/><path d="M8 22h8M10 9.5v5l4-2.5z"/></svg><span data-i18n="nav.library"></span></a>
+      <a href="#guide" data-scr="guide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M7 13h4M7 17h7"/></svg><span data-i18n="nav.guide"></span></a>
       <a href="#export" data-scr="export"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg><span data-i18n="nav.export"></span></a>
       <a href="#settings" data-scr="settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span data-i18n="nav.settings"></span></a>
     </nav>
@@ -463,6 +531,25 @@ html.popout body > :not(#popout):not(.sprite){display:none !important}
 </section>
 
 <!-- ================= EXPORT ================= -->
+<section class="screen" id="scr-guide">
+  <div class="pagehead"><div><h1 data-i18n="g.title"></h1><p class="sub" data-i18n="g.desc"></p></div></div>
+  <div class="card emptystate hidden" id="gEmpty">
+    <h2 data-i18n="g.empty.title"></h2>
+    <p data-i18n="g.empty.desc"></p>
+    <a class="btn primary" href="#library" data-i18n="g.empty.btn"></a>
+  </div>
+  <div class="guide hidden" id="gMain">
+    <aside class="card gside">
+      <select id="gCat" aria-label="Category" style="width:100%"></select>
+      <input type="search" id="gSearch" data-i18n-ph="g.search" style="margin-top:8px">
+      <label class="chk" style="margin-top:10px"><input type="checkbox" id="gOnlyEpg"> <span data-i18n="g.onlyEpg"></span></label>
+      <div class="glist" id="gList"></div>
+      <button class="btn sm hidden" id="gMore" type="button" style="margin-top:8px"></button>
+    </aside>
+    <section class="card gmain" id="gDetail"></section>
+  </div>
+</section>
+
 <section class="screen" id="scr-export">
   <div class="pagehead"><div><h1 data-i18n="ex.title"></h1><p class="sub" data-i18n="ex.desc"></p></div></div>
 
@@ -745,8 +832,8 @@ http://example.com:8080/get.php?username=myuser&amp;password=mypass&amp;type=m3u
    App info
    ===================================================================== */
 const APP = {
-  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.7.2',
-  released: '2026-11-13T13:35:00+02:00', tz: 'Africa/Cairo',
+  name: 'ISKANDER', tagline: 'IPTV Player on Web', version: '2.8.0',
+  released: '2026-11-15T18:24:00+02:00', tz: 'Africa/Cairo',
   devEn: 'Eng. Emad Kamel Abdou Iskander', devAr: 'م. عماد كامل عبده إسكندر'
 };
 
@@ -755,7 +842,22 @@ const APP = {
    ===================================================================== */
 const I18N = {
 en: {
-  'nav.library':'Library','nav.export':'Export','nav.settings':'Settings',
+  'nav.library':'Library','nav.export':'Export','nav.settings':'Settings','nav.guide':'TV guide',
+  'g.title':'TV guide','g.desc':'What’s on now and next on your channels, and each channel’s full schedule — when your server provides a programme guide (EPG).',
+  'g.empty.title':'No channels yet','g.empty.desc':'Load your live channels in the Library first; the guide is built from them.','g.empty.btn':'Open the Library',
+  'g.search':'Search channels…','g.onlyEpg':'Only channels with a guide','g.allCats':'All categories',
+  'g.loading':'Loading the guide…','g.none':'The server has no programme guide for this channel.','g.noneShort':'No guide','g.noneList':'No channels match.',
+  'g.now':'Now','g.nextAt':'Next {at}: {t}','g.minLeft':'{n} min left','g.live':'Watch live','g.watch':'Watch again',
+  'g.archive':'Catch-up: {n} days','g.yesterday':'Yesterday','g.today':'Today','g.tomorrow':'Tomorrow',
+  'g.pick':'Pick a channel to see its schedule.','g.err':'Couldn’t load the guide: {m}','g.full':'TV guide',
+  'd.loadingInfo':'Loading more details from the server…','d.infoErr':'The server sent no further details for this title.',
+  'd.tech':'Technical details','d.nowNext':'On now and next','d.more':'More details','d.trailer':'Trailer',
+  'd.hm':'{h} h {m} min','d.m':'{m} min','d.kbps':'{n} kb/s','d.archiveDays':'{n} days',
+  'd.ch.mono':'Mono','d.ch.stereo':'Stereo','d.unsupported':'this browser can’t play it','d.compatOk':'plays via compatibility mode','d.seasonAir':'First aired: {d}',
+  'd.f.orig':'Original title','d.f.release':'Release date','d.f.duration':'Duration','d.f.genre':'Genre','d.f.director':'Director','d.f.cast':'Cast',
+  'd.f.country':'Country','d.f.age':'Age rating','d.f.rating':'Rating','d.f.category':'Category','d.f.added':'Added','d.f.updated':'Last updated',
+  'd.f.container':'File type','d.f.bitrate':'Bitrate','d.f.video':'Video','d.f.audio':'Audio','d.f.runtime':'Episode length','d.f.seasons':'Seasons',
+  'd.f.episodes':'Episodes','d.f.num':'Channel number','d.f.epgid':'Guide (EPG) ID','d.f.archive':'Catch-up','d.f.type':'Stream type',
   'lang.btn':'عربي','theme.light':'Light','theme.dark':'Dark','theme.system':'System','theme.btn':'Theme: {m}',
   'chip.none':'No server added','chip.unchecked':'not checked','chip.more':'+{n}',
   'close':'Close','yes':'Yes','no':'No','unlimited':'Unlimited','unknown':'unknown','unc':'Uncategorized',
@@ -894,7 +996,22 @@ en: {
   'foot.ver':'v{v} · Released {d}','foot.dev':'Developed by {dev}'
 },
 ar: {
-  'nav.library':'المكتبة','nav.export':'التصدير','nav.settings':'الإعدادات',
+  'nav.library':'المكتبة','nav.export':'التصدير','nav.settings':'الإعدادات','nav.guide':'دليل البرامج',
+  'g.title':'دليل البرامج','g.desc':'ما يُعرض الآن وما يليه على قنواتك، والجدول الكامل لكل قناة — عندما يوفّر السيرفر دليل البرامج (EPG).',
+  'g.empty.title':'لا توجد قنوات بعد','g.empty.desc':'اجلب القنوات المباشرة من المكتبة أولاً؛ الدليل يُبنى منها.','g.empty.btn':'فتح المكتبة',
+  'g.search':'بحث في القنوات…','g.onlyEpg':'القنوات التي لها دليل فقط','g.allCats':'كل التصنيفات',
+  'g.loading':'جاري تحميل الدليل…','g.none':'السيرفر لا يوفّر دليل برامج لهذه القناة.','g.noneShort':'لا يوجد دليل','g.noneList':'لا توجد قنوات مطابقة.',
+  'g.now':'الآن','g.nextAt':'التالي {at}: {t}','g.minLeft':'متبقٍ {n} دقيقة','g.live':'مشاهدة مباشرة','g.watch':'مشاهدة الإعادة',
+  'g.archive':'الإعادة (Catch-up): {n} أيام','g.yesterday':'أمس','g.today':'اليوم','g.tomorrow':'غداً',
+  'g.pick':'اختر قناة لعرض جدولها.','g.err':'تعذّر تحميل الدليل: {m}','g.full':'دليل البرامج',
+  'd.loadingInfo':'جاري تحميل تفاصيل إضافية من السيرفر…','d.infoErr':'السيرفر لم يرسل تفاصيل إضافية لهذا العنوان.',
+  'd.tech':'تفاصيل فنية','d.nowNext':'يُعرض الآن وبعده','d.more':'تفاصيل أكثر','d.trailer':'الإعلان',
+  'd.hm':'{h} س {m} د','d.m':'{m} دقيقة','d.kbps':'{n} كيلوبت/ث','d.archiveDays':'{n} أيام',
+  'd.ch.mono':'أحادي','d.ch.stereo':'ستيريو','d.unsupported':'لا يدعمه هذا المتصفح','d.compatOk':'يعمل عبر وضع التوافق','d.seasonAir':'أول عرض: {d}',
+  'd.f.orig':'الاسم الأصلي','d.f.release':'تاريخ الإصدار','d.f.duration':'المدة','d.f.genre':'النوع','d.f.director':'المخرج','d.f.cast':'الممثلون',
+  'd.f.country':'البلد','d.f.age':'التصنيف العمري','d.f.rating':'التقييم','d.f.category':'التصنيف','d.f.added':'تاريخ الإضافة','d.f.updated':'آخر تحديث',
+  'd.f.container':'نوع الملف','d.f.bitrate':'معدل البت','d.f.video':'الصورة','d.f.audio':'الصوت','d.f.runtime':'مدة الحلقة','d.f.seasons':'المواسم',
+  'd.f.episodes':'الحلقات','d.f.num':'رقم القناة','d.f.epgid':'معرّف الدليل (EPG)','d.f.archive':'الإعادة (Catch-up)','d.f.type':'نوع البث',
   'lang.btn':'EN','theme.light':'نهاري','theme.dark':'ليلي','theme.system':'حسب النظام','theme.btn':'المظهر: {m}',
   'chip.none':'لم تتم إضافة سيرفر','chip.unchecked':'غير مفحوص','chip.more':'+{n}',
   'close':'إغلاق','yes':'نعم','no':'لا','unlimited':'غير محدود','unknown':'غير معروفة','unc':'بدون تصنيف',
@@ -1208,6 +1325,7 @@ function rerenderAll(){
   updateFormButtons(); updateLinkPreview(); renderAccounts(); renderChip(); renderProxyStatus(); renderCaps();
   if (state.formInfo) renderStatus(state.formInfo);
   renderLib(); refreshPreview(); renderDownloads();
+  if (state.screen === 'guide') renderGuide();
   if (state.player) updatePlayerUi();
   if (state.modal){ const [si, ii] = state.modal.ref.split(':').map(Number); openItem(si, ii); }
 }
@@ -1548,9 +1666,13 @@ function mapItem(kind, s, cm){
   const group = cm[String(s.category_id)] || '';
   const y = String(s.year || s.releaseDate || s.release_date || '').slice(0, 4);
   const year = /^\d{4}$/.test(y) ? y : '';
-  if (kind === 'live') return { kind, id: s.stream_id, name: title(s.name), logo: img(s.stream_icon), tvgId: s.epg_channel_id || '', group, added: toSec(s.added) };
-  if (kind === 'movie') return { kind, id: s.stream_id, name: title(s.name), logo: img(s.stream_icon), tvgId: '', group, ext: s.container_extension || 'mp4', rating: s.rating, year, added: toSec(s.added) };
-  return { kind: 'series', id: s.series_id, name: title(s.name), logo: img(s.cover), tvgId: '', group, plot: s.plot || '', genre: s.genre || '', cast: s.cast || '', rating: s.rating, year, added: toSec(s.last_modified || s.added), episodes: null };
+  // everything the lists carry is kept, for the details window and the TV guide
+  if (kind === 'live') return { kind, id: s.stream_id, name: title(s.name), logo: img(s.stream_icon), tvgId: s.epg_channel_id || '', group, added: toSec(s.added),
+    num: s.num || '', archive: String(s.tv_archive) === '1', archiveDays: Number(s.tv_archive_duration) || 0, stype: s.stream_type ? String(s.stream_type) : '' };
+  if (kind === 'movie') return { kind, id: s.stream_id, name: title(s.name), logo: img(s.stream_icon), tvgId: '', group, ext: s.container_extension || 'mp4', rating: s.rating, year, added: toSec(s.added),
+    rating5: s.rating_5based, plot: s.plot ? title(s.plot) : '', genre: s.genre ? String(s.genre) : '', cast: s.cast ? String(s.cast) : '', trailer: s.youtube_trailer || '', tmdb: s.tmdb || s.tmdb_id || '' };
+  return { kind: 'series', id: s.series_id, name: title(s.name), logo: img(s.cover), tvgId: '', group, plot: s.plot || '', genre: s.genre || '', cast: s.cast || '', rating: s.rating, year, added: toSec(s.last_modified || s.added), episodes: null,
+    rating5: s.rating_5based, director: s.director ? String(s.director) : '', trailer: s.youtube_trailer || '', tmdb: s.tmdb || '', release: String(s.releaseDate || s.release_date || ''), backdrop: img(firstOf(s.backdrop_path)) };
 }
 async function fetchContent(){
   const btn = $('#btnFetch'), msg = $('#fetchMsg');
@@ -1608,7 +1730,8 @@ async function loadEpisodes(src, it){
       if (!ep || ep.id == null) continue;
       const info = (ep.info && !Array.isArray(ep.info)) ? ep.info : {};
       eps.push({ id: ep.id, season: Number(ep.season ?? key) || 1, num: Number(ep.episode_num) || 0, title: title(ep.title || ''),
-        ext: ep.container_extension || 'mp4', img: img(info.movie_image || info.cover_big || ''), duration: info.duration || '', added: toSec(ep.added) });
+        ext: ep.container_extension || 'mp4', img: img(info.movie_image || info.cover_big || ''), duration: info.duration || '', added: toSec(ep.added),
+        plot: info.plot ? title(info.plot) : '', release: String(info.releasedate || info.air_date || ''), rating: info.rating, durSecs: Number(info.duration_secs) || 0, video: info.video, audio: info.audio });
     }
   }
   eps.sort((a, b) => a.season - b.season || a.num - b.num);
@@ -1617,6 +1740,14 @@ async function loadEpisodes(src, it){
   if (!it.genre && si.genre) it.genre = si.genre;
   if (!it.cast && si.cast) it.cast = si.cast;
   if (!it.logo) it.logo = img(si.cover);
+  // the whole series record and each season's own details (name, first air date, overview, cover)
+  it.sinfo = si;
+  if (!it.backdrop) it.backdrop = img(firstOf(si.backdrop_path));
+  it.seasons = {};
+  for (const s of asArray(data && data.seasons)){
+    const n = Number(s.season_number); if (!Number.isFinite(n)) continue;
+    it.seasons[n] = { name: title(s.name || ''), air: String(s.air_date || ''), overview: s.overview ? title(s.overview) : '', cover: img(s.cover_big || s.cover || '') };
+  }
   it.episodes = eps;
   return eps;
 }
@@ -1817,40 +1948,170 @@ function setVisibleCats(on){
 
 /* details modal */
 function closeModal(){ $('#modal').classList.remove('show'); state.modal = null; if (!state.player) document.body.style.overflow = ''; }
+/* ---------- Details window: everything the server can tell about a channel, film or series ---------- */
+const firstOf = v => Array.isArray(v) ? (v.find(x => typeof x === 'string' && x) || '') : (typeof v === 'string' ? v : '');
+function ratingText(r10, r5){
+  const a = Number(r10), b = Number(r5);
+  return a > 0 ? '★ ' + a.toFixed(1) + ' / 10' : b > 0 ? '★ ' + b.toFixed(1) + ' / 5' : '';
+}
+function trailerUrl(v){
+  v = String(v || '').trim(); if (!v) return '';
+  const m = v.match(/(?:youtu\.be\/|[?&]v=|embed\/)([\w-]{6,20})/);
+  const id = m ? m[1] : (/^[\w-]{6,20}$/.test(v) ? v : '');
+  return id ? 'https://www.youtube.com/watch?v=' + id : '';
+}
+const tmdbUrl = (id, tv) => /^\d{1,9}$/.test(String(id || '').trim()) ? `https://www.themoviedb.org/${tv ? 'tv' : 'movie'}/${String(id).trim()}` : '';
+function fmtDur(sec){
+  sec = Math.round(Number(sec) || 0); if (sec <= 0) return '';
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60);
+  return h ? t('d.hm', { h, m }) : t('d.m', { m: Math.max(1, m) });
+}
+function durText(info){
+  if (Number(info.duration_secs) > 0) return fmtDur(info.duration_secs);
+  const d = String(info.duration || '');
+  return /^\d{1,2}:\d{2}:\d{2}$/.test(d) ? fmtDur(d.split(':').reduce((a, x) => a * 60 + Number(x), 0)) : d;
+}
+const CODEC_NAMES = { h264: 'H.264', hevc: 'HEVC (H.265)', h265: 'HEVC (H.265)', av1: 'AV1', vp9: 'VP9', vp8: 'VP8', mpeg4: 'MPEG-4 Part 2', mpeg2video: 'MPEG-2',
+  aac: 'AAC', mp3: 'MP3', ac3: 'Dolby Digital (AC-3)', eac3: 'Dolby Digital Plus (E-AC-3)', dts: 'DTS', truehd: 'Dolby TrueHD', opus: 'Opus', flac: 'FLAC', vorbis: 'Vorbis' };
+const CODEC_KEY = { h264: 'h264', hevc: 'hevc', h265: 'hevc', av1: 'av1', mpeg4: 'mpeg4', mpeg2video: 'mpeg2', aac: 'aac', mp3: 'mp3', ac3: 'ac3', eac3: 'eac3', dts: 'dts', truehd: 'truehd' };
+function techVideo(v){
+  if (!v || typeof v !== 'object' || !v.codec_name) return null;
+  const c = String(v.codec_name).toLowerCase();
+  const tenBit = /1[02]le|p10|p12/.test(String(v.pix_fmt || '')) || /main ?10|high ?10/i.test(String(v.profile || ''));
+  const r = String(v.r_frame_rate || v.avg_frame_rate || ''); const [fa, fb] = r.split('/').map(Number);
+  const fps = fb ? fa / fb : Number(r);
+  const parts = [(CODEC_NAMES[c] || c.toUpperCase()) + (v.profile ? ' (' + v.profile + ')' : '') + (tenBit ? ' · 10-bit' : ''),
+    Number(v.width) && Number(v.height) ? v.width + '×' + v.height : '', fps > 0 && fps < 300 ? Math.round(fps * 100) / 100 + ' fps' : ''];
+  let key = CODEC_KEY[c] || '';
+  if (tenBit && key === 'hevc') key = 'hevc10';
+  if (tenBit && key === 'h264') key = 'h264hi10';
+  return { text: parts.filter(Boolean).join(' · '), key };
+}
+function channelsText(a){
+  const l = String(a.channel_layout || ''), n = Number(a.channels) || 0;
+  if (/7\.1/.test(l) || n === 8) return '7.1';
+  if (/5\.1/.test(l) || n === 6) return '5.1';
+  if (n === 2 || /stereo/i.test(l)) return t('d.ch.stereo');
+  if (n === 1 || /mono/i.test(l)) return t('d.ch.mono');
+  return n ? n + 'ch' : '';
+}
+function techAudio(a){
+  if (!a || typeof a !== 'object' || !a.codec_name) return null;
+  const c = String(a.codec_name).toLowerCase();
+  const sr = Number(a.sample_rate) ? Number(a.sample_rate) / 1000 + ' kHz' : '';
+  const lang = a.tags && a.tags.language && a.tags.language !== 'und' ? String(a.tags.language) : '';
+  return { text: [CODEC_NAMES[c] || c.toUpperCase(), channelsText(a), sr, lang].filter(Boolean).join(' · '), key: CODEC_KEY[c] || '' };
+}
+/* a codec this browser lacks gets a note: either "plays via compatibility mode" (Dolby audio) or "can't play it" */
+function supportBadge(key){
+  if (!key || !CODECS[key] || canDecode(key)) return '';
+  const ok = COMPAT_AUDIO.includes(key) && S.compat !== 'off' && compatSupported();
+  return ` <span class="badge ${ok ? 'ok' : 'err'}">${esc(t(ok ? 'd.compatOk' : 'd.unsupported'))}</span>`;
+}
+async function loadVodInfo(src, it){
+  if (it.vod) return it.vod;
+  const data = await apiGet(src.acc, 'get_vod_info&vod_id=' + enc(it.id), 30000);
+  const info = data && data.info && typeof data.info === 'object' && !Array.isArray(data.info) ? data.info : {};
+  it.vod = { info, md: (data && data.movie_data) || {} };
+  return it.vod;
+}
 async function openItem(si, ii){
   const src = state.sources[si], it = src && src.items[ii]; if (!it) return;
   const ref = si + ':' + ii;
   const keepSeason = state.modal && state.modal.ref === ref ? state.modal.season : undefined;
-  state.modal = { ref, src, it, season: keepSeason };
-  const tags = [grp(it.group), it.year, Number(it.rating) ? '★ ' + Number(it.rating).toFixed(1) : '', it.genre].filter(Boolean);
-  const isSeries = it.kind === 'series';
+  const m = state.modal = { ref, src, it, season: keepSeason };
+  const same = () => state.modal === m;
+  renderDetails();
+  $('#modal').classList.add('show'); document.body.style.overflow = 'hidden';
+  if (it.kind === 'movie' && src.acc && !it.vod){
+    m.loading = true; renderDetails();
+    try { await loadVodInfo(src, it); } catch { m.infoErr = true; }
+    m.loading = false;
+    if (same()) renderDetails();
+  } else if (it.kind === 'series' && !it.episodes && src.acc){
+    try { await loadEpisodes(src, it); renderGrid(); refreshPreview(); if (same()) renderDetails(); }
+    catch (e){ const box = $('#mEps'); if (box && same()) box.innerHTML = `<div class="msg show err">${esc(e.message)}</div>`; }
+  } else if (it.kind === 'live' && src.acc){
+    try { m.epg = await getEpg(src, it, false); } catch (e){ m.epgErr = e.message; }
+    if (same()) renderModalEpg();
+  }
+}
+function renderDetails(){
+  const m = state.modal; if (!m) return;
+  const { src, it } = m;
+  const isSeries = it.kind === 'series', isLive = it.kind === 'live', isMovie = it.kind === 'movie';
+  const vi = (it.vod && it.vod.info) || {}, si = it.sinfo || {};
   const url = isSeries ? '' : streamUrl(src, it);
+  const back = img(firstOf(vi.backdrop_path) || firstOf(si.backdrop_path) || '') || it.backdrop || '';
+  const poster = img(vi.movie_image || vi.cover_big || '') || it.logo;
+  const plot = title(vi.plot || vi.description || '') || it.plot || title(si.plot || '');
+  const genre = String(vi.genre || si.genre || it.genre || '');
+  const rating = ratingText(vi.rating || it.rating || si.rating, vi.rating_5based || it.rating5 || si.rating_5based);
+  const rel = String(vi.releasedate || vi.release_date || si.releaseDate || si.release_date || it.release || '');
+  const year = it.year || (/^\d{4}/.test(rel) ? rel.slice(0, 4) : '');
+  const tags = [grp(it.group), year, rating, genre.split(/\s*[,/|]\s*/).filter(Boolean).slice(0, 3).join(' · ')].filter(Boolean);
+  const orig = vi.o_name && title(vi.o_name) !== it.name ? title(vi.o_name) : '';
+  const trailer = trailerUrl(vi.youtube_trailer || si.youtube_trailer || it.trailer);
+  const tmdb = tmdbUrl(vi.tmdb_id || vi.tmdb || si.tmdb || si.tmdb_id || it.tmdb, isSeries);
+  const F = (k, v) => v ? `<dt>${esc(t('d.f.' + k))}</dt><dd>${esc(v)}</dd>` : '';
+  let facts = '';
+  if (isMovie){
+    facts = F('orig', orig) + F('release', rel) + F('duration', durText(vi)) + F('genre', genre) + F('director', vi.director) +
+      F('cast', vi.cast || vi.actors || it.cast) + F('country', vi.country) + F('age', vi.age || vi.mpaa_rating) + F('rating', rating) +
+      F('category', grp(it.group)) + F('added', it.added ? fmtDate(it.added, 'full') : '') + F('container', String(it.ext || '').toUpperCase()) +
+      F('bitrate', Number(vi.bitrate) ? t('d.kbps', { n: nf(vi.bitrate) }) : '');
+  } else if (isSeries){
+    const eps = it.episodes || [], ns = new Set(eps.map(e => e.season)).size;
+    facts = F('release', rel) + F('genre', genre) + F('director', si.director || it.director) + F('cast', si.cast || it.cast) + F('rating', rating) +
+      F('runtime', Number(si.episode_run_time) ? t('d.m', { m: si.episode_run_time }) : '') + F('seasons', ns ? nf(ns) : '') +
+      F('episodes', eps.length ? nf(eps.length) : '') + F('category', grp(it.group)) + F('updated', it.added ? fmtDate(it.added, 'full') : '');
+  } else if (isLive){
+    facts = F('num', it.num ? String(it.num) : '') + F('category', grp(it.group)) + F('epgid', it.tvgId) +
+      F('archive', it.archive ? t('d.archiveDays', { n: it.archiveDays || '?' }) : '') + F('type', it.stype) + F('added', it.added ? fmtDate(it.added, 'full') : '');
+  }
+  const vt = techVideo(vi.video), at = techAudio(vi.audio);
+  const tech = vt || at ? `<div class="dsec"><h4>${esc(t('d.tech'))}</h4><dl class="facts">` +
+    (vt ? `<dt>${esc(t('d.f.video'))}</dt><dd>${esc(vt.text)}${supportBadge(vt.key)}</dd>` : '') +
+    (at ? `<dt>${esc(t('d.f.audio'))}</dt><dd>${esc(at.text)}${supportBadge(at.key)}</dd>` : '') + '</dl></div>' : '';
+  const status = isMovie && m.loading ? `<p class="hint">${esc(t('d.loadingInfo'))}</p>` : isMovie && m.infoErr ? `<p class="hint">${esc(t('d.infoErr'))}</p>` : '';
+  const link = (href, label) => `<a class="btn sm" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
   $('#mBody').innerHTML = `
+    ${back ? `<div class="dback"><img src="${esc(mediaUrl(back))}" alt="" referrerpolicy="no-referrer"></div>` : ''}
     <div class="mhead">
-      <div class="poster ${it.kind === 'live' ? 'logo' : ''}">${thumbHtml(it.logo, it.name)}</div>
+      <div class="poster ${isLive ? 'logo' : ''}">${thumbHtml(poster, it.name)}</div>
       <div class="minfo">
-        <h3>${esc(it.name)}</h3>
+        <h3>${esc(it.name)}</h3>${orig ? `<p class="dorig">${esc(orig)}</p>` : ''}
         <div class="tags">${tags.map(x => `<span class="pill">${esc(x)}</span>`).join('')}</div>
-        ${it.added ? `<p class="hint added">${CAL_SVG}<span>${esc(addedText(it, 'full'))}</span></p>` : ''}
-        ${it.plot ? `<p class="plot">${esc(it.plot)}</p>` : ''}
-        ${it.cast ? `<p class="hint">${esc(it.cast)}</p>` : ''}
+        ${plot ? `<p class="plot">${esc(plot)}</p>` : ''}
         ${url ? `<div class="linkbox">${esc(url)}</div>` : ''}
         <div class="row mt">
           ${url ? `<button class="btn sm play" type="button" data-play>${PLAY_SVG} ${esc(t('d.play'))}</button>${canDownload(it) ? `<button class="btn sm" type="button" data-dl>${DL_SVG} ${esc(t('d.download'))}</button>` : ''}<button class="btn sm" type="button" data-copy="${esc(url)}">${esc(t('d.copyUrl'))}</button>` : ''}
-          ${it.logo ? `<button class="btn sm" type="button" data-copy="${esc(it.logo)}">${esc(t('d.copyImg'))}</button><a class="btn sm" href="${esc(it.logo)}" target="_blank" rel="noopener noreferrer">${esc(t('d.openImg'))}</a>` : ''}
+          ${isLive && src.acc ? `<button class="btn sm" type="button" data-guide>${esc(t('g.full'))}</button>` : ''}
+          ${trailer ? link(trailer, t('d.trailer')) : ''}${tmdb ? link(tmdb, 'TMDB') : ''}
+          ${poster ? `<button class="btn sm" type="button" data-copy="${esc(poster)}">${esc(t('d.copyImg'))}</button>${link(poster, t('d.openImg'))}` : ''}
         </div>
+        ${status}
       </div>
     </div>
+    ${facts ? `<dl class="facts dfacts">${facts}</dl>` : ''}
+    ${tech}
+    ${isLive && src.acc ? `<div class="dsec" id="mEpg"><h4>${esc(t('d.nowNext'))}</h4><p class="hint">${esc(t('g.loading'))}</p></div>` : ''}
     ${isSeries ? `<div id="mEps"><p class="hint">${esc(t('d.loadingEps'))}</p></div>` : ''}`;
-  $('#modal').classList.add('show'); document.body.style.overflow = 'hidden';
-  if (!isSeries) return;
-  if (it.episodes){ renderEpisodes(state.modal.season ?? null); return; }
-  try {
-    await loadEpisodes(src, it); renderGrid(); refreshPreview();
-    if (state.modal && state.modal.ref === ref) openItem(si, ii);
-  } catch (e){
-    const box = $('#mEps'); if (box && state.modal && state.modal.ref === ref) box.innerHTML = `<div class="msg show err">${esc(e.message)}</div>`;
-  }
+  if (isSeries && it.episodes) renderEpisodes(m.season ?? null);
+  if (isLive && (m.epg || m.epgErr)) renderModalEpg();
+}
+function renderModalEpg(){
+  const box = $('#mEpg'), m = state.modal; if (!box || !m) return;
+  const head = `<h4>${esc(t('d.nowNext'))}</h4>`;
+  if (m.epgErr){ box.innerHTML = head + `<p class="hint">${esc(t('g.err', { m: m.epgErr }))}</p>`; return; }
+  if (!m.epg) return;
+  const now = Date.now() / 1000;
+  const list = m.epg.filter(p => p.stop > now).slice(0, 3);
+  box.innerHTML = head + (list.length ? list.map(p => {
+    const on = p.start <= now && now < p.stop;
+    return `<div class="nn${on ? ' on' : ''}"><div class="nnrow"><time>${esc(fmtTime(p.start))}–${esc(fmtTime(p.stop))}</time><b>${esc(p.title)}</b>${on ? ` <span class="badge ok">${esc(t('g.now'))}</span>` : ''}</div>` +
+      (on ? `<span class="pbar"><i style="width:${pct(p, now)}%"></i></span>` : '') + (p.desc ? `<p class="hint nndesc">${esc(p.desc)}</p>` : '') + '</div>';
+  }).join('') : `<p class="hint">${esc(t('g.none'))}</p>`);
 }
 function renderEpisodes(season){
   const box = $('#mEps'); if (!box || !state.modal) return;
@@ -1859,12 +2120,23 @@ function renderEpisodes(season){
   const seasons = [...new Set(eps.map(e => e.season))];
   const cur = seasons.includes(season) ? season : seasons[0];
   state.modal.season = cur;
-  box.innerHTML = `<div class="row" style="margin:16px 0 8px">${seasons.map(s => `<button type="button" class="btn sm${s === cur ? ' primary' : ''}" data-season="${s}">${esc(t('d.season', { n: s }))}</button>`).join('')}<span class="hint" style="margin:0">${esc(t('ep.count', { n: nf(eps.length) }))}</span></div>` +
+  const meta = (it.seasons || {})[cur] || {};
+  const count = eps.filter(e => e.season === cur).length;
+  const head = meta.overview || meta.air || meta.cover || meta.name ? `<div class="seasonhead">${meta.cover ? `<img src="${esc(mediaUrl(meta.cover))}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ''}<div>` +
+    (meta.name ? `<b>${esc(meta.name)}</b>` : '') + (meta.air ? `<p class="hint" style="margin:2px 0">${esc(t('d.seasonAir', { d: meta.air }))}</p>` : '') +
+    (meta.overview ? `<p class="plot" style="margin:4px 0 0">${esc(meta.overview)}</p>` : '') + '</div></div>' : '';
+  box.innerHTML = `<div class="row" style="margin:16px 0 8px">${seasons.map(s => `<button type="button" class="btn sm${s === cur ? ' primary' : ''}" data-season="${s}">${esc(t('d.season', { n: s }))}</button>`).join('')}<span class="hint" style="margin:0">${esc(t('ep.count', { n: nf(count) }))}</span></div>` + head +
     eps.map((e, idx) => {
       if (e.season !== cur) return '';
       const u = episodeUrl(src, e);
+      const vt = techVideo(e.video), at = techAudio(e.audio), r = ratingText(e.rating);
+      const dur = e.duration || fmtDur(e.durSecs);
+      const more = (e.plot ? `<p>${esc(e.plot)}</p>` : '') + (e.release ? `<p class="hint">${esc(t('d.f.release'))}: ${esc(e.release)}</p>` : '') +
+        (r ? `<p class="hint">${esc(t('d.f.rating'))}: ${esc(r)}</p>` : '') +
+        (vt ? `<p class="hint">${esc(t('d.f.video'))}: ${esc(vt.text)}${supportBadge(vt.key)}</p>` : '') +
+        (at ? `<p class="hint">${esc(t('d.f.audio'))}: ${esc(at.text)}${supportBadge(at.key)}</p>` : '');
       return `<div class="ep"><div class="ethumb">${thumbHtml(e.img || it.logo, it.name)}</div>
-        <div class="einfo"><b>${esc(t('d.episode', { n: e.num }))}${e.title ? ' — ' + esc(e.title) : ''}</b>${e.duration ? `<span class="hint">${esc(e.duration)}</span>` : ''}${e.added ? `<span class="hint">${esc(t('d.addedAt', { d: fmtDate(e.added, 'short') }))}</span>` : ''}</div>
+        <div class="einfo"><b>${esc(t('d.episode', { n: e.num }))}${e.title ? ' — ' + esc(e.title) : ''}</b>${dur ? `<span class="hint">${esc(dur)}</span>` : ''}${e.added ? `<span class="hint">${esc(t('d.addedAt', { d: fmtDate(e.added, 'short') }))}</span>` : ''}${more ? `<details class="epd"><summary>${esc(t('d.more'))}</summary>${more}</details>` : ''}</div>
         <div class="epact"><button class="btn sm play" type="button" data-play-ep="${idx}">${PLAY_SVG} ${esc(t('d.play'))}</button><button class="btn sm" type="button" data-dl-ep="${idx}">${DL_SVG} ${esc(t('d.download'))}</button><button class="btn sm" type="button" data-copy="${esc(u)}">${esc(t('d.copyLink'))}</button></div></div>`;
     }).join('');
 }
@@ -2938,9 +3210,217 @@ videoEl.addEventListener('waiting', () => { if (state.player && !state.player.er
 videoEl.addEventListener('ended', () => { const p = state.player; if (S.autoNext && p && p.list[p.index].kind === 'episode' && p.index < p.list.length - 1) playerStep(1); });
 
 /* =====================================================================
+   TV guide (EPG) — from the Xtream API: get_short_epg (now / next) and get_simple_data_table (the full schedule)
+   ===================================================================== */
+const epgCache = new Map();
+/* titles and descriptions arrive base64-encoded (UTF-8); anything that doesn't decode cleanly is shown as sent */
+function b64text(s){
+  s = String(s ?? ''); const c = s.replace(/\s/g, '');
+  if (!c || c.length % 4 || !/^[A-Za-z0-9+/]+={0,2}$/.test(c)) return s;
+  try {
+    const out = new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(atob(c), ch => ch.charCodeAt(0)));
+    return /[\x00-\x08\x0E-\x1F]/.test(out) ? s : out;
+  } catch { return s; }
+}
+function parseServerTime(s){
+  const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/);
+  return m ? Date.UTC(+m[1], m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0)) / 1000 : 0;
+}
+function mapProg(p){
+  const start = Number(p.start_timestamp) || parseServerTime(p.start), stop = Number(p.stop_timestamp) || parseServerTime(p.end || p.stop);
+  return { start, stop, title: title(b64text(p.title)) || '—', desc: b64text(p.description).trim(), archive: String(p.has_archive) === '1' };
+}
+async function getEpg(src, it, full){
+  const key = src.sid + '|' + it.id + '|' + (full ? 'full' : 'short');
+  const hit = epgCache.get(key);
+  if (hit && Date.now() - hit.at < (full ? 30 : 10) * 60000) return hit.list;
+  const clean = data => asArray(data && data.epg_listings).map(mapProg).filter(p => p.start && p.stop > p.start);
+  let list;
+  if (full){
+    list = clean(await apiGet(src.acc, 'get_simple_data_table&stream_id=' + enc(it.id), 45000).catch(() => null));
+    if (!list.length) list = clean(await apiGet(src.acc, 'get_short_epg&stream_id=' + enc(it.id) + '&limit=200', 30000));
+  } else list = clean(await apiGet(src.acc, 'get_short_epg&stream_id=' + enc(it.id) + '&limit=4', 30000));
+  list.sort((a, b) => a.start - b.start);
+  list = list.filter((p, i) => i === 0 || p.start !== list[i - 1].start);
+  epgCache.set(key, { at: Date.now(), list });
+  return list;
+}
+/* a few guide requests at a time, so a long channel list doesn't flood the server */
+const epgQueue = { active: 0, jobs: [] };
+function queued(fn){ return new Promise((ok, bad) => { epgQueue.jobs.push({ fn, ok, bad }); pumpEpg(); }); }
+function pumpEpg(){
+  while (epgQueue.active < 4 && epgQueue.jobs.length){
+    const job = epgQueue.jobs.shift(); epgQueue.active++;
+    job.fn().then(job.ok, job.bad).finally(() => { epgQueue.active--; pumpEpg(); });
+  }
+}
+const fmtTime = sec => new Intl.DateTimeFormat(locale(), { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date(sec * 1000));
+const pct = (p, now) => Math.round(Math.max(0, Math.min(100, (now - p.start) / (p.stop - p.start) * 100)));
+const dayKey = sec => { const d = new Date(sec * 1000); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+function dayLabel(key){
+  const diff = Math.round((new Date(key + 'T12:00:00') - new Date(dayKey(Date.now() / 1000) + 'T12:00:00')) / 86400000);
+  if (diff === 0) return t('g.today'); if (diff === -1) return t('g.yesterday'); if (diff === 1) return t('g.tomorrow');
+  return new Intl.DateTimeFormat(locale(), { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(key + 'T12:00:00'));
+}
+
+const G = { cat: '', q: '', onlyEpg: true, sel: null, day: null, shown: 60, timer: 0, obs: null, rows: new Map(), full: null, scrollToNow: true };
+function guideItem(ref){
+  const [si, ii] = String(ref || '').split(':').map(Number); const src = state.sources[si];
+  return src && src.items[ii] ? { ref, src, it: src.items[ii] } : null;
+}
+function guideChannels(){
+  const q = G.q.trim().toLowerCase(), out = [];
+  state.sources.forEach((src, si) => {
+    if (!src.acc) return;        // a playlist imported from a file has no server to ask
+    src.items.forEach((it, ii) => {
+      if (it.kind !== 'live') return;
+      if (G.cat && grp(it.group) !== G.cat) return;
+      if (G.onlyEpg && !it.tvgId) return;
+      if (q && !it.name.toLowerCase().includes(q)) return;
+      out.push({ ref: si + ':' + ii, src, it });
+    });
+  });
+  return out;
+}
+function nowLine(list){
+  if (list === undefined) return '<span class="gnow">…</span>';
+  if (!list || !list.length) return `<span class="gnow">${esc(t('g.noneShort'))}</span>`;
+  const now = Date.now() / 1000, cur = list.find(p => p.start <= now && now < p.stop), next = list.find(p => p.start > now);
+  return `<span class="gnow">${cur ? esc(cur.title) : '—'}</span>` + (cur ? `<span class="pbar"><i style="width:${pct(cur, now)}%"></i></span>` : '') +
+    (next ? `<span class="gnext">${esc(t('g.nextAt', { at: fmtTime(next.start), t: next.title }))}</span>` : '');
+}
+function rowInner(c){ const v = G.rows.get(c.ref); return `<b>${esc(c.it.name)}</b>${nowLine(v ? v.list : undefined)}`; }
+function renderGuide(){
+  let count = 0; const cats = new Set();
+  state.sources.forEach(src => src.acc && src.items.forEach(it => { if (it.kind === 'live'){ count++; cats.add(grp(it.group)); } }));
+  $('#gEmpty').classList.toggle('hidden', count > 0);
+  $('#gMain').classList.toggle('hidden', !count);
+  if (!count){ stopGuideTimer(); return; }
+  const list = [...cats].sort((a, b) => a.localeCompare(b, S.lang));
+  if (G.cat && !list.includes(G.cat)) G.cat = '';
+  $('#gCat').innerHTML = `<option value="">${esc(t('g.allCats'))}</option>` + list.map(c => `<option${c === G.cat ? ' selected' : ''}>${esc(c)}</option>`).join('');
+  $('#gOnlyEpg').checked = G.onlyEpg; $('#gSearch').value = G.q;
+  const chs = guideChannels();
+  if (!guideItem(G.sel)) G.sel = chs.length ? chs[0].ref : null;
+  $('#gList').innerHTML = chs.length ? chs.slice(0, G.shown).map(c => `<button type="button" class="gch${c.ref === G.sel ? ' on' : ''}" data-g="${c.ref}"><span class="glogo">${thumbHtml(c.it.logo, c.it.name)}</span><span class="gtx">${rowInner(c)}</span></button>`).join('')
+    : `<p class="hint" style="padding:8px">${esc(t('g.noneList'))}</p>`;
+  $('#gMore').classList.toggle('hidden', chs.length <= G.shown);
+  $('#gMore').textContent = t('items.more', { n: nf(Math.max(0, chs.length - G.shown)) });
+  observeRows();
+  renderGuideDetail();
+  startGuideTimer();
+}
+function loadRow(ref){
+  const c = guideItem(ref); if (!c) return;
+  G.rows.set(ref, { at: Date.now(), list: undefined, loading: true });
+  queued(() => getEpg(c.src, c.it, false)).then(list => list, () => null).then(list => {
+    G.rows.set(ref, { at: Date.now(), list });
+    const el = $(`#gList .gch[data-g="${ref}"] .gtx`); if (el) el.innerHTML = rowInner(c);
+  });
+}
+function observeRows(){
+  if (G.obs) G.obs.disconnect();
+  const rows = $$('#gList .gch').filter(el => !G.rows.has(el.dataset.g));
+  if (!('IntersectionObserver' in window)){ rows.forEach(el => loadRow(el.dataset.g)); return; }
+  G.obs = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting){ G.obs.unobserve(e.target); if (!G.rows.has(e.target.dataset.g)) loadRow(e.target.dataset.g); }
+  }), { root: $('#gList'), rootMargin: '300px 0px' });
+  rows.forEach(el => G.obs.observe(el));
+}
+async function renderGuideDetail(){
+  const box = $('#gDetail'), c = guideItem(G.sel);
+  if (!c){ box.innerHTML = `<p class="hint">${esc(t('g.pick'))}</p>`; return; }
+  const head = `<div class="gdhead"><span class="glogo big">${thumbHtml(c.it.logo, c.it.name)}</span><div class="gdname"><h2>${esc(c.it.name)}</h2>` +
+    `<p class="hint">${esc([grp(c.it.group), c.it.archive ? t('g.archive', { n: c.it.archiveDays || '?' }) : ''].filter(Boolean).join(' · '))}</p></div>` +
+    `<button class="btn sm play" type="button" data-glive>${PLAY_SVG} ${esc(t('g.live'))}</button></div>`;
+  if (!G.full || G.full.ref !== c.ref){
+    box.innerHTML = head + `<p class="hint">${esc(t('g.loading'))}</p>`;
+    const ref = c.ref; let list = null, err = '';
+    try { list = await getEpg(c.src, c.it, true); } catch (e){ err = e.message; }
+    if (G.sel !== ref) return;
+    G.full = { ref, list, err };
+  }
+  if (G.full.err){ box.innerHTML = head + `<p class="hint">${esc(t('g.err', { m: G.full.err }))}</p>`; return; }
+  const list = G.full.list || [];
+  if (!list.length){ box.innerHTML = head + `<p class="hint">${esc(t('g.none'))}</p>`; return; }
+  const now = Date.now() / 1000, today = dayKey(now);
+  const days = [...new Set(list.map(p => dayKey(p.start)))];
+  if (!G.day || !days.includes(G.day)) G.day = days.includes(today) ? today : days[0];
+  const keepScroll = $('#gProgs') ? $('#gProgs').scrollTop : 0;
+  box.innerHTML = head + `<div class="row gdays">${days.map(d => `<button type="button" class="btn sm${d === G.day ? ' primary' : ''}" data-gday="${d}">${esc(dayLabel(d))}</button>`).join('')}</div>` +
+    `<div class="gprogs" id="gProgs">${list.map((p, i) => dayKey(p.start) === G.day ? progRow(c, p, i, now) : '').join('')}</div>`;
+  const pr = $('#gProgs'), cur = pr.querySelector('.gp.now');
+  if (G.scrollToNow){ G.scrollToNow = false; pr.scrollTop = cur ? Math.max(0, cur.offsetTop - 48) : 0; }
+  else pr.scrollTop = keepScroll;
+}
+function canCatchup(it, p, now){
+  if (!it.archive || p.stop > now) return false;
+  const days = Number(it.archiveDays) || 0;
+  return p.archive || (days > 0 && p.start >= now - days * 86400);
+}
+function progRow(c, p, i, now){
+  const on = p.start <= now && now < p.stop, past = p.stop <= now;
+  return `<div class="gp${on ? ' now' : past ? ' past' : ''}" data-gp="${i}">
+    <div class="gtime">${esc(fmtTime(p.start))}<span>${esc(fmtTime(p.stop))}</span></div>
+    <div class="gpm"><b>${esc(p.title)}</b>${on ? `<span class="gnowtag"><span class="badge ok">${esc(t('g.now'))}</span> ${esc(t('g.minLeft', { n: Math.max(1, Math.round((p.stop - now) / 60)) }))}</span><span class="pbar"><i style="width:${pct(p, now)}%"></i></span>` : ''}${p.desc ? `<p class="gdesc">${esc(p.desc)}</p>` : ''}</div>
+    <div class="gpa">${on ? `<button class="btn sm play" type="button" data-glive>${PLAY_SVG} ${esc(t('g.live'))}</button>` : canCatchup(c.it, p, now) ? `<button class="btn sm" type="button" data-gcatch="${i}">${PLAY_SVG} ${esc(t('g.watch'))}</button>` : ''}</div>
+  </div>`;
+}
+function startGuideTimer(){ if (!G.timer) G.timer = setInterval(refreshGuide, 60000); }
+function stopGuideTimer(){ clearInterval(G.timer); G.timer = 0; }
+/* once a minute: move the progress bars on, and ask again for rows whose guide is older than ten minutes */
+function refreshGuide(){
+  if (state.screen !== 'guide'){ stopGuideTimer(); return; }
+  $$('#gList .gch').forEach(el => {
+    const ref = el.dataset.g, v = G.rows.get(ref); if (!v || v.loading) return;
+    if (Date.now() - v.at > 600000){ loadRow(ref); return; }
+    const c = guideItem(ref); if (c) el.querySelector('.gtx').innerHTML = rowInner(c);
+  });
+  if (G.full && G.full.ref === G.sel) renderGuideDetail();
+}
+/* catch-up (timeshift): the start time is written in the server's own time zone, as Xtream expects */
+function catchupUrl(src, it, p){
+  const a = src.acc, tz = src.info && src.info.tz;
+  let parts;
+  try { parts = new Intl.DateTimeFormat('en-GB', { timeZone: tz || undefined, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(p.start * 1000)); }
+  catch { parts = new Intl.DateTimeFormat('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(p.start * 1000)); }
+  const v = Object.fromEntries(parts.map(x => [x.type, x.value]));
+  const dur = Math.max(1, Math.ceil((p.stop - p.start) / 60));
+  return `${a.server}/timeshift/${enc(a.username)}/${enc(a.password)}/${dur}/${v.year}-${v.month}-${v.day}:${v.hour}-${v.minute}/${it.id}.ts`;
+}
+function playGuideLive(){
+  const chs = guideChannels(); let idx = chs.findIndex(c => c.ref === G.sel);
+  const list = idx >= 0 ? chs : [guideItem(G.sel)].filter(Boolean); if (idx < 0) idx = 0;
+  if (list.length) openPlayer(list.map(c => entryFor(c.src, c.it)), idx);
+}
+function playCatchup(i){
+  const c = guideItem(G.sel), p = G.full && G.full.list && G.full.list[i]; if (!c || !p) return;
+  openPlayer([{ title: c.it.name + ' — ' + p.title, url: catchupUrl(c.src, c.it, p), kind: 'archive', logo: c.it.logo,
+    sub: dayLabel(dayKey(p.start)) + ' · ' + fmtTime(p.start) + '–' + fmtTime(p.stop), acc: c.src.acc }], 0);
+}
+$('#scr-guide').addEventListener('click', e => {
+  const ch = e.target.closest('[data-g]');
+  if (ch){
+    G.sel = ch.dataset.g; G.day = null; G.scrollToNow = true;
+    $$('#gList .gch').forEach(b => b.classList.toggle('on', b === ch));
+    renderGuideDetail();
+    if (matchMedia('(max-width: 860px)').matches) $('#gDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+  if (e.target.closest('[data-glive]')){ playGuideLive(); return; }
+  const cu = e.target.closest('[data-gcatch]'); if (cu){ playCatchup(Number(cu.dataset.gcatch)); return; }
+  const d = e.target.closest('[data-gday]'); if (d){ G.day = d.dataset.gday; G.scrollToNow = true; renderGuideDetail(); return; }
+  if (e.target.closest('#gMore')){ G.shown += 120; renderGuide(); return; }
+  const gp = e.target.closest('.gp'); if (gp) gp.classList.toggle('open');
+});
+$('#gCat').addEventListener('change', e => { G.cat = e.target.value; G.shown = 60; renderGuide(); });
+$('#gSearch').addEventListener('input', e => { G.q = e.target.value; G.shown = 60; renderGuide(); });
+$('#gOnlyEpg').addEventListener('change', e => { G.onlyEpg = e.target.checked; G.shown = 60; renderGuide(); });
+
+/* =====================================================================
    Routing
    ===================================================================== */
-const SCREENS = ['library', 'export', 'settings'];
+const SCREENS = ['library', 'guide', 'export', 'settings'];
 function route(){
   const [scr0, sec] = location.hash.replace(/^#/, '').split('/');
   const scr = SCREENS.includes(scr0) ? scr0 : (state.accounts.length ? 'library' : 'settings');
@@ -2954,6 +3434,7 @@ function route(){
     else window.scrollTo(0, 0);
   } else window.scrollTo(0, 0);
   if (scr === 'export') refreshPreview();
+  if (scr === 'guide') renderGuide(); else stopGuideTimer();
 }
 window.addEventListener('hashchange', route);
 // clicking a link to the hash we're already on should still scroll to it
@@ -3098,6 +3579,14 @@ $('#modal').addEventListener('click', e => {
   if (de){
     const ep = (state.modal.it.episodes || [])[Number(de.dataset.dlEp)];
     if (ep) startDownload({ title: epName(state.modal.it, ep), url: episodeUrl(state.modal.src, ep), ext: ep.ext });
+    return;
+  }
+  if (e.target.closest('[data-guide]')){
+    // this channel's schedule in the TV guide (filters cleared, so it is in the list)
+    G.sel = state.modal.ref; G.cat = ''; G.q = ''; G.day = null; G.scrollToNow = true;
+    if (!state.modal.it.tvgId) G.onlyEpg = false;
+    closeModal();
+    if (location.hash === '#guide') route(); else location.hash = '#guide';
     return;
   }
   const pe = e.target.closest('[data-play-ep]'); if (pe) playEpisode(state.modal.src, state.modal.it, Number(pe.dataset.playEp));
